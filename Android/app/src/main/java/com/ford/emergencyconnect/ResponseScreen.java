@@ -29,12 +29,21 @@ public class ResponseScreen extends AppCompatActivity {
         ref.child("distress").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //Ignore old messages
                 Log.i("Debug", "Distress Child Added");
                 long time = (long) dataSnapshot.child("timestamp").getValue();
                 Log.i("Debug", new Date().getTime() - time + " ms");
                 if(new Date().getTime() - time <= 30000){
                     TextView tv = (TextView) findViewById(R.id.displayMessage);
-                    tv.setText(dataSnapshot.toString());
+                    DistressMessage message = new DistressMessage((double) dataSnapshot.child("lat").getValue(),
+                            (double) dataSnapshot.child("lng").getValue(),
+                            dataSnapshot.child("name").getValue().toString(),
+                            Integer.parseInt(dataSnapshot.child("age").getValue().toString()),
+                            dataSnapshot.child("preConditions").getValue().toString(),
+                            dataSnapshot.child("phoneNumber").getValue().toString(),
+                            Integer.parseInt(dataSnapshot.child("numPassengers").getValue().toString()));
+                    tv.setText(message.toString());
+                    //Determine if GPS location is close enought
                 }
             }
 
