@@ -104,6 +104,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(i);
             }
         });
+        bypassResponse.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), ResponseScreen.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void populateAutoComplete() {
