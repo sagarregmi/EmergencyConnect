@@ -93,6 +93,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        Button bypassDistress = (Button) findViewById(R.id.bypassDistress);
+        Button bypassResponse = (Button) findViewById(R.id.bypassResponse);
+
+        bypassDistress.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), DistressScreen.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void populateAutoComplete() {
