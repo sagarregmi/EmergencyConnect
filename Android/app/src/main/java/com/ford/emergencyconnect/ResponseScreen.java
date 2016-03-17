@@ -21,10 +21,17 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Date;
 
-public class ResponseScreen extends AppCompatActivity implements LocationListener {
+public class ResponseScreen extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
     double lat;
     double lng;
     LocationManager locationManager;
@@ -54,6 +61,12 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             Log.i("Debug", "Last known location null");
         }
 
+        //Initialize Map
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
         Firebase.setAndroidContext(this);
         final Firebase ref = new Firebase("https://emergencyconnect.firebaseio.com/");
 
@@ -77,28 +90,24 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                     //Determine if GPS location is close enough
                     Log.i("Debug", "DistressGPS " + message.lat + ", " + message.lng);
                     Log.i("Debug", "ResponseGPS " + lat + ", " + lng);
+                    LatLng responseLocation = new LatLng(lat, lng);
+                    LatLng distressLocation = new LatLng(message.lat, message.lng);
+                    GoogleMap map = mapFragment.getMap();
+                    if(map != null) {
+                        map.addMarker(new MarkerOptions()
+                                .title("DISTRESS")
+                                .position(distressLocation));
+                    }
                 }
             }
-
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
+            public void onCancelled(FirebaseError firebaseError) {}
         });
     }
 
@@ -140,5 +149,16 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        //LatLng here = new LatLng(lat, lng);
+        LatLng hardcoded = new LatLng(37.4234775, -122.1420958);
+        //googleMap.setMyLocationEnabled(true);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
+        map.addMarker(new MarkerOptions()
+                .title("You")
+                .position(hardcoded));
     }
 }
