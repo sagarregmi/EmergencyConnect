@@ -3,6 +3,7 @@ package com.ford.emergencyconnect;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -28,7 +30,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private Switch mSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,9 +97,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+        mSwitch = (Switch) findViewById(R.id.login_switch);
+
+        mSwitch.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSwitch.setEnabled(true);
+                mSwitch.setChecked(true);
+            }
+        });
+
+        /*
         Button bypassDistress = (Button) findViewById(R.id.bypassDistress);
         Button bypassResponse = (Button) findViewById(R.id.bypassResponse);
 
@@ -111,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(i);
             }
         });
+        */
     }
 
     private void populateAutoComplete() {
@@ -353,6 +372,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
+                // Find the selection from the switch and open the respsective activity
                 Intent i = new Intent(LoginActivity.this, DistressScreen.class);
                 startActivity(i);
 
