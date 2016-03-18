@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -20,8 +19,9 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone"
         android:layout_gravity="center"/>
-
+<!--
     <TextView
+        android:id="@+id/textViewLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login as"
@@ -32,61 +32,79 @@
         android:gravity="center"
         android:layout_marginBottom="10dp"/>
 
+        -->
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
+        <!--
+                <TextView
+                    android:id="@+id/textViewDistress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Regular User"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/switchRole"
+                    android:layout_toStartOf="@+id/switchRole"
+                    android:layout_marginRight="10dp"
+                    android:textColor="#ff0000"
+                    android:textSize="16dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Distress"
-            android:id="@+id/textView4"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/login_switch"
-            android:layout_toStartOf="@+id/login_switch"
-            android:layout_marginRight="10dp"
-            android:textColor="#ff0000"
-            android:textSize="16dp" />
+                <Switch
+                    android:id="@+id/switchRole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#ff0000"
+                    android:textSize="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:textOff="Regular User"
+                    android:textOn="Responder"
 
+                    />
+        -->
         <Switch
+            android:id="@+id/switchRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/login_switch"
-            android:layout_gravity="center_horizontal"
-            android:textColor="#ff0000"
-            android:textSize="20dp"
-            android:layout_alignParentTop="true"
+            android:textOff="Driver"
+            android:textOn="Responder"
+            android:thumb="@drawable/customswitchselector"
+            android:track="@drawable/custom_track"
             android:layout_centerHorizontal="true"
-            android:enabled="true" />
+            android:showText="true"
+            android:textSize="12dp"/>
 
+        <!--
         <TextView
+            android:id="@+id/textViewResponder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Responder"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/login_switch"
-            android:layout_toEndOf="@+id/login_switch"
-            android:textColor="#ff0000"
+            android:layout_toRightOf="@+id/switchRole"
+            android:layout_toEndOf="@+id/switchRole"
+            android:textColor="@color/LightGrey"
             android:layout_marginLeft="10dp"
             android:textSize="16dp" />
+-->
 
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/loginScrollView"
         android:layout_width="match_parent"
-        android:layout_height="156dp"
-        >
+        android:layout_height="156dp">
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="30dp"
-            >
+            android:layout_marginTop="30dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
