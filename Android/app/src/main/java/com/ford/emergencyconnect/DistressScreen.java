@@ -23,7 +23,7 @@ import java.util.Calendar;
 /**
  * Created by sregmi1 on 3/15/16.
  */
-public class DistressScreen extends Activity implements LocationListener {
+public class DistressScreen extends AppCompatActivity implements LocationListener {
     double lat;
     double lng;
     LocationManager locationManager;
