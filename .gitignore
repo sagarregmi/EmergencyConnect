@@ -6,4 +6,5 @@ Android/.idea/workspace.xml
 /.idea/libraries
 .DS_Store
 /build
-/captures
+Android/build
+/captures:
