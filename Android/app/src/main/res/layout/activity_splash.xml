@@ -2,14 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cc0000" >
+    android:background="#f78181"
+    android:gravity="center_horizontal">
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ec_logo_splash_screen"
-        android:layout_centerVertical="true"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ec_logo_splash_screen2"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/tvSplashScreenAppName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Emergency Connect"
+        android:textColor="@color/White"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_below="@+id/imgLogo"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
+    <TextView
+        android:id="@+id/tvSplashScreenAppDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crowd Sourced\nEmergency Response"
+        android:textColor="@color/White"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="16dp"
+        android:layout_below="@+id/tvSplashScreenAppName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="64dp" />
+
+    <ImageView
+        android:id="@+id/ford_hfhs_logo"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/White"
+        android:src="@drawable/ford_hfhs_logo"
+        android:layout_marginTop="67dp"
+        android:layout_below="@+id/tvSplashScreenAppDescription"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

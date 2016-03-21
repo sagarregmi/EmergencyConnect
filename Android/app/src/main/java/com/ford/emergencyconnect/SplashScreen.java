@@ -13,7 +13,7 @@ import com.ford.emergencyconnect.R;
 public class SplashScreen extends Activity {
 
     // splash screen timer
-    private static int SPLASH_TIME_OUT = 1500;
+    private static int SPLASH_TIME_OUT = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
