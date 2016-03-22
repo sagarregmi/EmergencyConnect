@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -48,11 +49,30 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
     private String provider;
     final String API_KEY = "AIzaSyBbLd62uXZrIQygltPle2l3l88CoT8C8oo";
     DistressMessage distressMessage;
+    String distressKey;
+    Firebase ref;
+    int ETA;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_response_screen);
+        Firebase.setAndroidContext(this);
+        ref = new Firebase("https://emergencyconnect.firebaseio.com/");
+        initLocation();
+        initFirebase();
 
+        Button yesResponse = (Button) findViewById(R.id.yesResponse);
+        yesResponse.setEnabled(false);
+        yesResponse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendResponseMessage();
+            }
+        });
+
+    }
+
+    private void initLocation(){
         // Get the location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Define the criteria how to select the locatioin provider -> use
@@ -72,16 +92,9 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         } else {
             Log.i("Debug", "Last known location null");
         }
+    }
 
-        //Initialize Map
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
-        Firebase.setAndroidContext(this);
-        final Firebase ref = new Firebase("https://emergencyconnect.firebaseio.com/");
-
+    private void initFirebase(){
         ref.child("distress").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -102,17 +115,7 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
 
                     createDistressMessageUI();
 
-                    //Determine if GPS location is close enough
-                    Log.i("Debug", "DistressGPS " + distressMessage.lat + ", " + distressMessage.lng);
-                    Log.i("Debug", "ResponseGPS " + lat + ", " + lng);
-                    LatLng responseLocation = new LatLng(lat, lng);
-                    LatLng distressLocation = new LatLng(distressMessage.lat, distressMessage.lng);
-                    GoogleMap map = mapFragment.getMap();
-                    if(map != null) {
-                        map.addMarker(new MarkerOptions()
-                                .title("DISTRESS")
-                                .position(distressLocation));
-                    }
+                    distressKey = dataSnapshot.getKey();
                     isInRange();
                 }
             }
@@ -149,7 +152,11 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         final boolean inRange = false;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + distressMessage.lat + "," + distressMessage.lng +
-                "&destination=" + "37.4234775,-119.1420958" + "&key=AIzaSyD2drkOw0W2n6ZAjlkgUCfNc12z0O7E4Jk";
+                "&destination=" + "37.4234775,-122.1420958" + "&key=AIzaSyD2drkOw0W2n6ZAjlkgUCfNc12z0O7E4Jk";
+        //Initialize Map
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         Log.i("Debug", url);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -163,22 +170,34 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                             JSONObject directions = new JSONObject(response);
                             JSONArray routes = directions.getJSONArray("routes");
                             for(int i=0; i<routes.length(); i++){
-                                int travelTime = 0;
+                                ETA = 0;
                                 JSONObject route = routes.getJSONObject(i);
                                 JSONArray legs = route.getJSONArray("legs");
                                 for(int j=0; j<legs.length(); j++){
                                     JSONObject leg = legs.getJSONObject(j);
                                     JSONObject duration = leg.getJSONObject("duration");
                                     int legTime = duration.getInt("value");
-                                    travelTime += legTime;
+                                    ETA += legTime;
                                 }
-                                Log.i("Debug", "Travel Time = " + travelTime);
-                                if(travelTime <= 600){
+                                Log.i("Debug", "Travel Time = " + ETA);
+                                if(ETA <= 600){
                                     //Within 10 minutes
                                     if(!sentNotif){
+                                        //Show on map
+                                        LatLng responseLocation = new LatLng(lat, lng);
+                                        LatLng distressLocation = new LatLng(distressMessage.lat, distressMessage.lng);
+                                        GoogleMap map = mapFragment.getMap();
+                                        if(map != null) {
+                                            map.addMarker(new MarkerOptions()
+                                                    .title("DISTRESS")
+                                                    .position(distressLocation));
+                                        }
                                         //send Notification
                                         sentNotif = true;
                                         sendNotification();
+                                        //Enable response button
+                                        Button yesResponse = (Button) findViewById(R.id.yesResponse);
+                                        yesResponse.setEnabled(true);
                                     }
                                 }
                             }
@@ -186,7 +205,6 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -200,6 +218,11 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
 
     private void sendNotification(){
         Log.i("Debug", "Notification Sent");
+    }
+
+    private void sendResponseMessage(){
+        ResponseMessage message = new ResponseMessage("Owen", 26, "CPR", "555-555-5555", ETA, distressKey);
+        ref.child("response").push().setValue(message);
     }
 
     protected void onResume() {
@@ -226,22 +249,12 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         lat = location.getLatitude();
         lng = location.getLongitude();
     }
-
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
+    public void onStatusChanged(String provider, int status, Bundle extras) {    }
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
+    public void onProviderEnabled(String provider) {    }
     @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
+    public void onProviderDisabled(String provider) {}
     @Override
     public void onMapReady(GoogleMap map) {
         //LatLng here = new LatLng(lat, lng);
