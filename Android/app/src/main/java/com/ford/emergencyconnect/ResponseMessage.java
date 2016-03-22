@@ -11,18 +11,20 @@ public class ResponseMessage {
     public int age;
     public String skills;
     public String phoneNumber;
+    public String distressKey;
 
     public int ETA;
     public Date timestamp;
 
     ResponseMessage(){}
 
-    ResponseMessage(String name, int age, String skills, String phoneNumber, int ETA){
+    ResponseMessage(String name, int age, String skills, String phoneNumber, int ETA, String distressKey){
         this.name = name;
         this.age = age;
         this.skills = skills;
         this.phoneNumber = phoneNumber;
         this.ETA = ETA;
+        this.distressKey = distressKey;
         this.timestamp = new Date();
     }
 }
