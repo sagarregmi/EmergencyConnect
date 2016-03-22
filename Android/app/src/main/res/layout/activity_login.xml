@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ford.emergencyconnect.LoginActivity"
     android:weightSum="1"
-    android:background="#f78181">
+    android:background="@color/White">
 
     <!-- Login progress -->
     <ProgressBar
@@ -20,53 +20,13 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone"
         android:layout_gravity="center"/>
-<!--
-    <TextView
-        android:id="@+id/textViewLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login as"
-        android:textStyle="bold"
-        android:textColor="#ff0000"
-        android:layout_weight="0.12"
-        android:textSize="20dp"
-        android:gravity="center"
-        android:layout_marginBottom="10dp"/>
 
-        -->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
-        <!--
-                <TextView
-                    android:id="@+id/textViewDistress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Regular User"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/switchRole"
-                    android:layout_toStartOf="@+id/switchRole"
-                    android:layout_marginRight="10dp"
-                    android:textColor="#ff0000"
-                    android:textSize="16dp" />
 
-                <Switch
-                    android:id="@+id/switchRole"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#ff0000"
-                    android:textSize="20dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:textOff="Regular User"
-                    android:textOn="Responder"
-
-                    />
-        -->
         <Switch
             android:id="@+id/switchRole"
             android:layout_width="wrap_content"
@@ -79,19 +39,6 @@
             android:showText="true"
             android:textSize="12dp"/>
 
-        <!--
-        <TextView
-            android:id="@+id/textViewResponder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Responder"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/switchRole"
-            android:layout_toEndOf="@+id/switchRole"
-            android:textColor="@color/LightGrey"
-            android:layout_marginLeft="10dp"
-            android:textSize="16dp" />
--->
 
     </RelativeLayout>
 

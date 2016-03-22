@@ -14,6 +14,10 @@ import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -28,12 +32,63 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
     double lng;
     LocationManager locationManager;
     private String provider;
+    private SeekBar seekBar;
+    private Switch mDisableAppSwitch;
+    private TextView textViewTotalPassengersNum;
+    private int totalPassengers = 0;
 
+    private static final String TAG = DistressScreen.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distress_screen);
+
+        textViewTotalPassengersNum = (TextView)findViewById(R.id.tvTotalPassengersNum);
+        seekBar = (SeekBar) findViewById(R.id.distressScreenSeekbar);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChanged = 0;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressChanged = progress;
+                Log.d(TAG, "onProgressChanged: " + progress);
+                textViewTotalPassengersNum.setText("" + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                totalPassengers = progressChanged;
+                Log.d(TAG, "onStopTrackingTouch: " + totalPassengers);
+                textViewTotalPassengersNum.setText("" + totalPassengers);
+                ecApp.setTotalPassengers(totalPassengers);
+            }
+        });
+
+        mDisableAppSwitch = (Switch) findViewById(R.id.distressScreenSwitch);
+
+        mDisableAppSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                if (isChecked) {
+                    mDisableAppSwitch.setChecked(true);
+                    Log.d(TAG, "App is Disabled");
+                    ecApp.setAppState(ecApp.DRIVER_MODE_DISABLED);
+                } else {
+                    mDisableAppSwitch.setChecked(false);
+                    Log.d(TAG, "App is Enabled");
+                    ecApp.setAppState(ecApp.DRIVER_MODE_ENABLED);
+                }
+            }
+        });
+
         Firebase.setAndroidContext(this);
         final Firebase ref = new Firebase("https://emergencyconnect.firebaseio.com/");
 
@@ -66,6 +121,7 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
                 ref.child("distress").push().setValue(message);
             }
         });
+
     }
 
     protected void onResume() {
