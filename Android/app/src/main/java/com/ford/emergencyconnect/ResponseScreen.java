@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -218,6 +219,13 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
 
     private void sendNotification(){
         Log.i("Debug", "Notification Sent");
+
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ec_app_logo2)
+                .setContentTitle("There is an emergency " + ETA + " minutes away!")
+                .setContentText("Can you help?");
+
     }
 
     private void sendResponseMessage(){
