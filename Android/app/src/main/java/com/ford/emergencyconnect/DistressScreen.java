@@ -3,6 +3,7 @@ package com.ford.emergencyconnect;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -14,6 +15,11 @@ import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.NumberPicker;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -23,19 +29,67 @@ import java.util.Calendar;
 /**
  * Created by sregmi1 on 3/15/16.
  */
-public class DistressScreen extends AppCompatActivity implements LocationListener {
+public class DistressScreen extends AppCompatActivity implements LocationListener, View.OnClickListener {
     double lat;
     double lng;
     LocationManager locationManager;
     private String provider;
+    private Switch mDisableAppSwitch;
+    private NumberPicker numberPicker = null;
+    private int totalPassengers = 0;
+    private Firebase ref = null;
+
+    private static final String TAG = DistressScreen.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distress_screen);
+
+        Button sendDistress = (Button) findViewById(R.id.btnCrash);
+        sendDistress.setOnClickListener(this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        numberPicker = (NumberPicker)findViewById(R.id.numberPicker);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(10);
+        numberPicker.setWrapSelectorWheel(true);
+
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                // TODO Auto-generated method stub
+                totalPassengers = newVal;
+                Log.d(TAG, "Total Passengers " + newVal);
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                ecApp.setTotalPassengers(totalPassengers);
+
+            }
+        });
+
+        mDisableAppSwitch = (Switch) findViewById(R.id.distressScreenSwitch);
+
+        mDisableAppSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                if (isChecked) {
+                    mDisableAppSwitch.setChecked(true);
+                    Log.d(TAG, "App is Disabled");
+                    ecApp.setAppState(ecApp.DRIVER_MODE_DISABLED);
+                } else {
+                    mDisableAppSwitch.setChecked(false);
+                    Log.d(TAG, "App is Enabled");
+                    ecApp.setAppState(ecApp.DRIVER_MODE_ENABLED);
+                }
+            }
+        });
+
         Firebase.setAndroidContext(this);
-        final Firebase ref = new Firebase("https://emergencyconnect.firebaseio.com/");
+        ref = new Firebase("https://emergencyconnect.firebaseio.com/");
 
         // Get the location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -56,16 +110,18 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
         } else {
             Log.i("Debug", "Last known location null");
         }
+    }
 
-        Button sendDistress = (Button) findViewById(R.id.crashButton);
-        sendDistress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DistressMessage message = new DistressMessage(lat, lng,
-                        "Owen", 26, "None", "555-555-5555", 0);
-                ref.child("distress").push().setValue(message);
-            }
-        });
+    @Override public void onClick(View v) {
+        Log.i(TAG, "Creating a Distress message");
+        DistressMessage message = new DistressMessage(lat, lng,
+                "Owen", 26, "None", "555-555-5555", 0);
+        if( null != ref) {
+            ref.child("distress").push().setValue(message);
+        }
+
+        Intent i = new Intent(DistressScreen.this, ResponderListActivity.class);
+        startActivity(i);
     }
 
     protected void onResume() {

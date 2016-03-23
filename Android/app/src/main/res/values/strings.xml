@@ -13,5 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_response_screen">ResponseScreen</string>
+    <string name="title_activity_response_screen">Response Screen</string>
+    <string name="title_activity_responder_list">Responders List</string>
+    title_activity_responder_list
+
 </resources>
