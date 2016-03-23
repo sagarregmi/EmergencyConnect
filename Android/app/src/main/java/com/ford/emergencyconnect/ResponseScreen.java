@@ -113,8 +113,8 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                 Log.i("Debug", "Distress Child Added");
                 long time = (long) dataSnapshot.child("timestamp").getValue();
                 Log.i("Debug", new Date().getTime() - time + " ms");
+
                 if (new Date().getTime() - time <= 30000) {
-                    TextView tv = (TextView) findViewById(R.id.displayMessage);
                     distressMessage = new DistressMessage((double) dataSnapshot.child("lat").getValue(),
                             (double) dataSnapshot.child("lng").getValue(),
                             dataSnapshot.child("name").getValue().toString(),
@@ -122,7 +122,9 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                             dataSnapshot.child("preConditions").getValue().toString(),
                             dataSnapshot.child("phoneNumber").getValue().toString(),
                             Integer.parseInt(dataSnapshot.child("numPassengers").getValue().toString()));
-                    tv.setText(distressMessage.toString());
+
+                    createDistressMessageUI();
+
                     distressKey = dataSnapshot.getKey();
                     isInRange();
                 }
@@ -144,6 +146,24 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+    }
+
+    private void createDistressMessageUI(){
+
+        if (distressMessage == null) return;
+
+        //TextView tv = (TextView) findViewById(R.id.distress_message);
+        //tv.setText(distressMessage.toString());
+
+        TextView distressName = (TextView) findViewById(R.id.distress_name);
+        TextView distressAge = (TextView) findViewById(R.id.distress_age);
+        TextView distressPreExisting = (TextView) findViewById(R.id.distress_preexisting);
+        TextView distressPhone = (TextView) findViewById(R.id.distress_phone);
+
+        distressName.setText("Name : " + distressMessage.name);
+        distressAge.setText("Age : " + distressMessage.age);
+        distressPreExisting.setText("Pre-existing Conditions : " + distressMessage.preConditions);
+        distressPhone.setText("Phone Number : " + distressMessage.phoneNumber);
     }
 
     private void isInRange(){
