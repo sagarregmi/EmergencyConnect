@@ -27,8 +27,8 @@
             android:dither="true"
             android:useLevel="false">
             <gradient
-                android:startColor="#66AAFF00"
-                android:endColor="#6600FF00"
+                android:startColor="#009933"
+                android:endColor="#009933"
                 android:angle="270"/>
             <corners
                 android:radius="15dp"/>

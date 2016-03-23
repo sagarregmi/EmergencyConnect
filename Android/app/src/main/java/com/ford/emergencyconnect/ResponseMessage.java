@@ -27,4 +27,33 @@ public class ResponseMessage {
         this.distressKey = distressKey;
         this.timestamp = new Date();
     }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getDistressKey() {
+        return distressKey;
+    }
+
+    public int getETA() {
+        return ETA;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
 }
