@@ -1,8 +1,13 @@
 package com.ford.emergencyconnect;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -53,6 +58,7 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
     String distressKey;
     Firebase ref;
     int ETA;
+    boolean inForeground = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +77,13 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             }
         });
 
+        inForeground = true;
     }
 
     private void initLocation(){
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         // Get the location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Define the criteria how to select the locatioin provider -> use
@@ -103,9 +113,8 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                 Log.i("Debug", "Distress Child Added");
                 long time = (long) dataSnapshot.child("timestamp").getValue();
                 Log.i("Debug", new Date().getTime() - time + " ms");
-                if(new Date().getTime() - time <= 30000){
 
-
+                if (new Date().getTime() - time <= 30000) {
                     distressMessage = new DistressMessage((double) dataSnapshot.child("lat").getValue(),
                             (double) dataSnapshot.child("lng").getValue(),
                             dataSnapshot.child("name").getValue().toString(),
@@ -120,14 +129,22 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                     isInRange();
                 }
             }
+
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
             @Override
-            public void onCancelled(FirebaseError firebaseError) {}
+            public void onCancelled(FirebaseError firebaseError) {
+            }
         });
     }
 
@@ -154,10 +171,6 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + distressMessage.lat + "," + distressMessage.lng +
                 "&destination=" + "37.4234775,-122.1420958" + "&key=AIzaSyD2drkOw0W2n6ZAjlkgUCfNc12z0O7E4Jk";
-        //Initialize Map
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         Log.i("Debug", url);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -184,18 +197,21 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                                 if(ETA <= 600){
                                     //Within 10 minutes
                                     if(!sentNotif){
-                                        //Show on map
-                                        LatLng responseLocation = new LatLng(lat, lng);
-                                        LatLng distressLocation = new LatLng(distressMessage.lat, distressMessage.lng);
-                                        GoogleMap map = mapFragment.getMap();
-                                        if(map != null) {
-                                            map.addMarker(new MarkerOptions()
-                                                    .title("DISTRESS")
-                                                    .position(distressLocation));
-                                        }
                                         //send Notification
                                         sentNotif = true;
-                                        sendNotification();
+                                        if(!inForeground) {
+                                            sendNotification();
+                                        }else{
+                                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                                                    .findFragmentById(R.id.map);
+                                            LatLng distressLocation = new LatLng(distressMessage.lat, distressMessage.lng);
+                                            GoogleMap map = mapFragment.getMap();
+                                            if(map != null) {
+                                                map.addMarker(new MarkerOptions()
+                                                        .title("DISTRESS")
+                                                        .position(distressLocation));
+                                            }
+                                        }
                                         //Enable response button
                                         Button yesResponse = (Button) findViewById(R.id.yesResponse);
                                         yesResponse.setEnabled(true);
@@ -220,11 +236,28 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
     private void sendNotification(){
         Log.i("Debug", "Notification Sent");
 
+        Intent i = new Intent(this, ResponseScreen.class);
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.ec_app_logo2);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(getApplicationContext(),
+                        0,
+                        i,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ec_app_logo2)
-                .setContentTitle("There is an emergency " + ETA + " minutes away!")
+                .setAutoCancel(true)
+                .setContentTitle("Emergency reported " + ETA/60 + " minutes away!")
+                .setVibrate(new long[]{1000, 1000, 1000})
+                .setContentIntent(resultPendingIntent)
                 .setContentText("Can you help?");
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(001, mBuilder.build());
 
     }
 
@@ -240,6 +273,7 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             return;
         }
         locationManager.requestLocationUpdates(provider, 400, 1, this);
+        inForeground = true;
     }
 
     @Override
@@ -250,6 +284,7 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             return;
         }
         locationManager.removeUpdates(this);
+        inForeground = false;
     }
 
     @Override
