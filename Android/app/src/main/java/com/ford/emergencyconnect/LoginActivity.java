@@ -75,10 +75,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private Switch mSwitch;
 
+    // user db
+    private UserDb userDb;
+
+    // the current user, after logged in
+    public User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // initialize user db
+        userDb = new UserDb(getApplicationContext());
+
+        // create test users
+        User userOne = new User("one@ford.com", "12345", "Test One", "555-111-5555", 40, "CPR, First-aid", "Asthma, Headaches", "Distress");
+        User userTwo = new User("two@ford.com", "12345", "Test Two", "555-222-5555", 35, "Triage, Bandage Dressing", "Seizures, PTSD", "Response");
+        userDb.createUser(userOne);
+        userDb.createUser(userTwo);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -111,8 +127,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                EmergencyConnectApplication ecApp = (EmergencyConnectApplication)getApplicationContext();
-                if(isChecked) {
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                if (isChecked) {
                     mSwitch.setChecked(true);
                     ecApp.setRole(ecApp.ROLE_RESPONDER);
                     Log.d(TAG, "Role set = " + ecApp.ROLE_RESPONDER);
@@ -233,11 +249,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, (EmergencyConnectApplication)getApplication());
-            mAuthTask.execute((Void) null);
+            // look up user in userdb and respond accordingly
+            User user = userDb.findUser(email, password);
+            if (user != null) {
+                currentUser = user;
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                Intent i = null;
+                if (ecApp.getRole() == 1) {
+                    i = new Intent(getApplicationContext(), DistressScreen.class);
+                }
+                else if (ecApp.getRole() == 2) {
+                    i = new Intent(getApplicationContext(), ResponseScreen.class);
+                }
+                //finish();
+                startActivity(i);
+            } else {
+                mEmailView.setError(getString(R.string.error_email_password_nomatch));
+                mPasswordView.setError(getString(R.string.error_email_password_nomatch));
+            }
+            //showProgress(true);
+            //mAuthTask = new UserLoginTask(email, password, (EmergencyConnectApplication)getApplication());
+            //mAuthTask.execute((Void) null);
         }
     }
 
@@ -248,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 3;
     }
 
     /**
@@ -347,7 +379,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
         private final String mEmail;
         private final String mPassword;
         private EmergencyConnectApplication ec = null;
