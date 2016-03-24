@@ -9,7 +9,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ford.emergencyconnect.LoginActivity"
     android:weightSum="1"
-    android:background="@color/White">
+    android:background="@color/LightRed2"
+    android:padding="10dip" >
 
     <!-- Login progress -->
     <ProgressBar
@@ -19,40 +20,57 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        />
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@drawable/border"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Your Role"
+            android:textColor="@color/LightRed"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="20dp"/>
         <Switch
             android:id="@+id/switchRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textOff="Driver"
-            android:textOn="Responder"
+            android:textOn=" Responder "
             android:thumb="@drawable/customswitchselector"
             android:track="@drawable/custom_track"
             android:layout_centerHorizontal="true"
             android:showText="true"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/Green"
+            />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/loginScrollView"
         android:layout_width="match_parent"
-        android:layout_height="156dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="30dp"
+            android:background="@drawable/border" >
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -97,12 +115,30 @@
     <Button
         android:id="@+id/email_sign_in_button"
         style="?android:textAppearanceSmall"
-        android:layout_width="207dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         android:text="@string/action_sign_in"
         android:textStyle="bold"
-        android:background="#ff0000"
+        android:background="@color/Green"
         android:textColor="#ffffff"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src ="@drawable/ec_app_logo2"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Emergency Connect"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textColor="#ffffff" />
 </LinearLayout>
