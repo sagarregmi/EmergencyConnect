@@ -262,6 +262,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 else if (ecApp.getRole() == 2) {
                     i = new Intent(getApplicationContext(), ResponseScreen.class);
                 }
+                i.putExtra("user", currentUser);
                 startActivity(i);
             } else {
                 mEmailView.setError(getString(R.string.error_email_password_nomatch));
