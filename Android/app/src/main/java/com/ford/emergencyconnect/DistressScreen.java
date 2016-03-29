@@ -130,12 +130,15 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
         NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
         DistressMessage message = new DistressMessage(lat, lng,
                 "Owen", 26, "None", "555-555-5555", passengers.getValue());
-        if( null != ref) {
-            ref.child("distress").push().setValue(message);
-        }
 
-        Intent i = new Intent(DistressScreen.this, ResponderListActivity.class);
-        startActivity(i);
+        if( null != ref) {
+            Firebase newChildref = ref.child("distress").push();
+            String distressKey = newChildref.getKey();
+            newChildref.setValue(message);
+            Intent i = new Intent(DistressScreen.this, ResponderListActivity.class);
+            i.putExtra("distressKey", distressKey);
+            startActivity(i);
+        }
     }
 
     protected void onResume() {
