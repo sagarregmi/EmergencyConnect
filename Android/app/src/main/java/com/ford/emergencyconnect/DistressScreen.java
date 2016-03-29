@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -54,7 +57,12 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
         Button sendDistress = (Button) findViewById(R.id.btnCrash);
         sendDistress.setOnClickListener(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        android.support.v7.widget.Toolbar
+                myToolbar = (android.support.v7.widget.Toolbar
+                ) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setIcon(R.drawable.ec_app_logo2);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         numberPicker = (NumberPicker)findViewById(R.id.numberPicker);
         numberPicker.setMinValue(0);
@@ -193,5 +201,12 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
     public void onProviderDisabled(String provider) {
         Toast.makeText(this, "Disabled provider " + provider,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_actionbar, menu);
+        return true;
     }
 }

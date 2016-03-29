@@ -86,6 +86,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        getSupportActionBar().hide();
+
         // initialize user db
         userDb = new UserDb(getApplicationContext());
 
