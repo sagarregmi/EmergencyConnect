@@ -124,36 +124,14 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
         } else {
             Log.i("Debug", "Last known location null");
         }
-        ref.child("response").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                long time = (long) dataSnapshot.child("timestamp").getValue();
-                if (new Date().getTime() - time <= 30000) {
-                    Log.i("Debug", dataSnapshot.toString());
-                    ResponseMessage message = new ResponseMessage(dataSnapshot.child("name").getValue().toString(),
-                            Integer.parseInt(dataSnapshot.child("age").getValue().toString()),
-                            dataSnapshot.child("skills").getValue().toString(),
-                            dataSnapshot.child("phoneNumber").getValue().toString(),
-                            Integer.parseInt(dataSnapshot.child("ETA").getValue().toString()),
-                            dataSnapshot.child("distressKey").getValue().toString());
-                    Log.i("Debug", message.toString());
-                }
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {}
-        });
     }
 
     @Override public void onClick(View v) {
         Log.i(TAG, "Creating a Distress message");
+        //Get passengers
+        NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
         DistressMessage message = new DistressMessage(lat, lng,
-                "Owen", 26, "None", "555-555-5555", 0);
+                "Owen", 26, "None", "555-555-5555", passengers.getValue());
         if( null != ref) {
             ref.child("distress").push().setValue(message);
         }
