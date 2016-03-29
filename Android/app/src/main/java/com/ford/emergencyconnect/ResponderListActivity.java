@@ -1,6 +1,7 @@
 package com.ford.emergencyconnect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -27,21 +28,17 @@ public class ResponderListActivity extends AppCompatActivity{
 
     ListView lv;
     Context context;
-
+    String distressKey;
     private ArrayList<ResponseMessage> responseList = new ArrayList<ResponseMessage>();
     private Firebase ref = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_responders_list);
+        Intent intent = getIntent();
+        distressKey = intent.getStringExtra("distressKey");
         Firebase.setAndroidContext(this);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
-        /*
-        android.support.v7.widget.Toolbar
-                myToolbar = (android.support.v7.widget.Toolbar
-                ) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        */
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         context = this;
@@ -65,11 +62,13 @@ public class ResponderListActivity extends AppCompatActivity{
                             Integer.parseInt(dataSnapshot.child("age").getValue().toString()),
                             dataSnapshot.child("skills").getValue().toString(),
                             dataSnapshot.child("phoneNumber").getValue().toString(),
-                            Integer.parseInt(dataSnapshot.child("ETA").getValue().toString()),
+                            Integer.parseInt(dataSnapshot.child("ETA").getValue().toString())/60,
                             dataSnapshot.child("distressKey").getValue().toString());
                     Log.i("Debug", message.toString());
-                    responseList.add(message);
-                    lv.invalidateViews();
+                    if(message.distressKey.equals(distressKey)) {
+                        responseList.add(message);
+                        lv.invalidateViews();
+                    }
                 }
             }
             @Override

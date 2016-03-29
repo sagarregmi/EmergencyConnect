@@ -55,10 +55,16 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
     Firebase ref;
     int ETA;
     boolean inForeground = false;
+    private User user = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_response_screen);
+
+        //Get User
+        Intent intent = getIntent();
+        user = intent.getExtras().getParcelable("user");
+
         Firebase.setAndroidContext(this);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
         initLocation();
