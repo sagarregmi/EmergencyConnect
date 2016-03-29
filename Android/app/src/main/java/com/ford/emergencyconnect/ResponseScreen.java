@@ -13,12 +13,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +33,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -238,7 +234,7 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
 
         Intent i = new Intent(this, ResponseScreen.class);
         Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.ec_app_logo2);
+                R.drawable.ec_app_logo);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(getApplicationContext(),
                         0,
@@ -247,7 +243,7 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
 
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ec_app_logo2)
+                .setSmallIcon(R.drawable.ec_app_logo)
                 .setAutoCancel(true)
                 .setContentTitle("Emergency reported " + ETA/60 + " minutes away!")
                 .setVibrate(new long[]{1000, 1000, 1000})

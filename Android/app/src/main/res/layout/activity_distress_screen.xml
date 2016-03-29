@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="@color/White"
-    tools:context=".DistressScreen">
+    tools:context=".DistressScreen"
+    android:background="@color/LightRed2">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="#d9d9d9"
         android:elevation="4dp"
         android:theme="@style/CustomActionBarTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -22,7 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
-        android:background="@color/Grey"
+        android:background="@drawable/border"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="horizontal"
         android:gravity="center"
         android:weightSum="1"
@@ -49,7 +54,8 @@
             android:orientation="vertical"
             android:layout_weight="0.5"
             android:layout_marginLeft="20dp"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,9 +67,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Sagar Regmi"
+                    android:textColor="@color/LightRed"
                     android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"/>
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/tvUserAddress"
@@ -71,11 +77,19 @@
                     android:layout_height="wrap_content"
                     android:text="San Jose, CA"
                     android:textSize="16dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/LightRed"
                     android:layout_marginTop="10dp"/>
 
-            </LinearLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:text="Logout"
+                    android:textColor="@color/White"
+                    android:id="@+id/button"
+                    android:background="@color/Green"
+                    android:layout_marginTop="5dp"/>
 
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -84,60 +98,69 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/BrightNavyBlue" />
+        android:background="#ffffff" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Grey"
-        android:layout_weight="0.2"
+        android:background="@drawable/border"
+        android:layout_weight="0.1"
         android:gravity="center"
         android:orientation="vertical"
-        android:weightSum="1">
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Total Passengers"
             android:textSize="20dp"
-            android:textColor="@color/black"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textStyle="bold" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textColor="@color/LightRed"/>
 
-        <NumberPicker
+        <com.ford.emergencyconnect.NumberPicker
             android:id="@+id/numberPicker"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:layout_weight="0.25"
+            android:textColor="@color/LightRed"
             android:solidColor="@color/White"
-            android:showDividers="end">
-        </NumberPicker>
+            android:showDividers="end"
+            android:descendantFocusability="blocksDescendants"
+            >
+        </com.ford.emergencyconnect.NumberPicker>
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/BrightNavyBlue" />
+        android:background="#ffffff" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Grey"
-        android:layout_weight="0.1"
+        android:background="@drawable/border"
+        android:layout_weight="0.2"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Disable App"
-            android:textColor="@color/black"
+            android:textColor="@color/LightRed"
             android:textSize="20dp"
             android:layout_centerInParent="true"
             android:gravity="center"
@@ -154,17 +177,12 @@
             android:track="@drawable/custom_track"
             android:layout_centerHorizontal="true"
             android:showText="true"
+            android:textColor="@color/White"
             android:textSize="12dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"/>
     </LinearLayout>
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/White"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -182,7 +200,7 @@
             android:text="Simulate Crash"
             android:background="@color/Red"
             android:textColor="@color/White"
-            android:layout_weight="0.19">
+            >
         </Button>
     </LinearLayout>
 </LinearLayout>
