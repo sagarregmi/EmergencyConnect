@@ -156,10 +156,10 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         TextView distressPreExisting = (TextView) findViewById(R.id.distress_preexisting);
         TextView distressPhone = (TextView) findViewById(R.id.distress_phone);
 
-        distressName.setText("Name : " + distressMessage.name);
-        distressAge.setText("Age : " + distressMessage.age);
-        distressPreExisting.setText("Pre-existing Conditions : " + distressMessage.preConditions);
-        distressPhone.setText("Phone Number : " + distressMessage.phoneNumber);
+        distressName.setText(distressMessage.name);
+        distressAge.setText("" + distressMessage.age);
+        distressPreExisting.setText(distressMessage.preConditions);
+        distressPhone.setText(distressMessage.phoneNumber);
     }
 
     private void isInRange(){
