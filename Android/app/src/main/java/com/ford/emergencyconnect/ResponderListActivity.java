@@ -36,12 +36,14 @@ public class ResponderListActivity extends AppCompatActivity{
         setContentView(R.layout.activity_responders_list);
         Firebase.setAndroidContext(this);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
-        /*
+
         android.support.v7.widget.Toolbar
                 myToolbar = (android.support.v7.widget.Toolbar
                 ) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(getResources().getColor(R.color.LightRed));
         setSupportActionBar(myToolbar);
-        */
+        getSupportActionBar().setIcon(R.drawable.ec_app_icon);
+        getSupportActionBar().setTitle("Driver Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         context = this;
@@ -72,14 +74,22 @@ public class ResponderListActivity extends AppCompatActivity{
                     lv.invalidateViews();
                 }
             }
+
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
             @Override
-            public void onCancelled(FirebaseError firebaseError) {}
+            public void onCancelled(FirebaseError firebaseError) {
+            }
         });
     }
 }
