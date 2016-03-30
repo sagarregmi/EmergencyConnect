@@ -92,10 +92,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         userDb = new UserDb(getApplicationContext());
 
         // create test users
-        User userOne = new User("one@ford.com", "12345", "Test One", "555-111-5555", 40, "CPR, First-aid", "Asthma, Headaches", "Distress");
-        User userTwo = new User("two@ford.com", "12345", "Test Two", "555-222-5555", 35, "Triage, Bandage Dressing", "Seizures, PTSD", "Response");
-        userDb.createUser(userOne);
-        userDb.createUser(userTwo);
+        if (userDb.numUsers() == 0) {
+            createDefaultUsers();
+        }
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -263,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 else if (ecApp.getRole() == 2) {
                     i = new Intent(getApplicationContext(), ResponseScreen.class);
                 }
-                //finish();
+                i.putExtra("user", currentUser);
                 startActivity(i);
             } else {
                 mEmailView.setError(getString(R.string.error_email_password_nomatch));
@@ -442,6 +441,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    // default hardcoded users
+    private void createDefaultUsers() {
+        User userOne = new User("one@ford.com", "12345", "Test One", "555-111-5555", 41, "CPR", "Asthma", "Distress");
+        User userTwo = new User("two@ford.com", "12345", "Test Two", "555-222-5555", 42, "Triage", "Seizures", "Response");
+        User userThree = new User("three@ford.com", "12345", "Test Three", "555-333-5555", 43, "First-aid", "Headaches", "Distress");
+        User userFour = new User("four@ford.com", "12345", "Test Four", "555-444-5555", 44, "Bandage Dressing", "Depression", "Response");
+        User userFive = new User("five@ford.com", "12345", "Test Five", "555-555-5555", 45, "Surgery", "PTSD", "Distress");
+
+        User ocarpen4 = new User("ocarpen4@ford.com", "12345", "Owen Carpenter", "555-555-5555", 99, "None", "None", "Response");
+        User skanna = new User("skanna@ford.com", "12345", "Srilaxmi Kanna", "555-555-5555", 99, "None", "None", "Response");
+        User sregmi1 = new User("sregmi1@ford.com", "12345", "Sagar Regmi", "555-555-5555", 99, "None", "None", "Response");
+        User kmarx2 = new User("kmarx2@ford.com", "12345", "Kevin Marx", "555-555-5555", 99, "None", "None", "Response");
+
+        userDb.createUser(userOne);
+        userDb.createUser(userTwo);
+        userDb.createUser(userThree);
+        userDb.createUser(userFour);
+        userDb.createUser(userFive);
+
+        userDb.createUser(ocarpen4);
+        userDb.createUser(skanna);
+        userDb.createUser(sregmi1);
+        userDb.createUser(kmarx2);
     }
 }
 

@@ -45,6 +45,7 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
     private NumberPicker numberPicker = null;
     private int totalPassengers = 0;
     private Firebase ref = null;
+    private User user = null;
 
     private static final String TAG = DistressScreen.class.getSimpleName();
 
@@ -53,6 +54,9 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distress_screen);
+        //Get User
+        Intent intent = getIntent();
+        user = intent.getExtras().getParcelable("user");
 
         Button sendDistress = (Button) findViewById(R.id.btnCrash);
         sendDistress.setOnClickListener(this);
@@ -132,12 +136,15 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
         NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
         DistressMessage message = new DistressMessage(lat, lng,
                 "Owen", 26, "None", "555-555-5555", passengers.getValue());
-        if( null != ref) {
-            ref.child("distress").push().setValue(message);
-        }
 
-        Intent i = new Intent(DistressScreen.this, ResponderListActivity.class);
-        startActivity(i);
+        if( null != ref) {
+            Firebase newChildref = ref.child("distress").push();
+            String distressKey = newChildref.getKey();
+            newChildref.setValue(message);
+            Intent i = new Intent(DistressScreen.this, ResponderListActivity.class);
+            i.putExtra("distressKey", distressKey);
+            startActivity(i);
+        }
     }
 
     protected void onResume() {

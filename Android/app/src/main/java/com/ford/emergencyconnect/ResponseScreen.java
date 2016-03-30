@@ -55,10 +55,16 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
     Firebase ref;
     int ETA;
     boolean inForeground = false;
+    private User user = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_response_screen);
+
+        //Get User
+        Intent intent = getIntent();
+        user = intent.getExtras().getParcelable("user");
+
         Firebase.setAndroidContext(this);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
         initLocation();
@@ -156,10 +162,10 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         TextView distressPreExisting = (TextView) findViewById(R.id.distress_preexisting);
         TextView distressPhone = (TextView) findViewById(R.id.distress_phone);
 
-        distressName.setText("Name : " + distressMessage.name);
-        distressAge.setText("Age : " + distressMessage.age);
-        distressPreExisting.setText("Pre-existing Conditions : " + distressMessage.preConditions);
-        distressPhone.setText("Phone Number : " + distressMessage.phoneNumber);
+        distressName.setText(distressMessage.name);
+        distressAge.setText("" + distressMessage.age);
+        distressPreExisting.setText(distressMessage.preConditions);
+        distressPhone.setText(distressMessage.phoneNumber);
     }
 
     private void isInRange(){
