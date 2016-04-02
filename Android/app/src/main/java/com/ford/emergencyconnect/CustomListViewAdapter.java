@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,10 +21,10 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
     ResponseMessage responseMessage = null;
     private ArrayList data;
 
-    public CustomListViewAdapter(ResponderListActivity respondersListActivity, ArrayList d) {
+    public CustomListViewAdapter(ResponderScreen responderScreen, ArrayList d) {
 
         data = d;
-        activity = respondersListActivity;
+        activity = responderScreen;
         inflater = ( LayoutInflater )activity.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -107,8 +106,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
 
         @Override
         public void onClick(View arg0) {
-            ResponderListActivity sct = (ResponderListActivity)activity;
-            //
+
         }
     }
 
