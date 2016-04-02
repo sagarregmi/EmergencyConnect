@@ -12,6 +12,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -45,8 +46,8 @@ import org.json.JSONObject;
 import java.util.Date;
 
 public class ResponseScreen extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
-    double lat;
-    double lng;
+    double lat = 0.0;
+    double lng = 0.0;
     LocationManager locationManager;
     private String provider;
     final String API_KEY = "AIzaSyBbLd62uXZrIQygltPle2l3l88CoT8C8oo";
@@ -81,6 +82,22 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             }
         });
 
+        Button directionsButton = (Button) findViewById(R.id.directionsButton);
+        directionsButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+                if(lat==0.0 || lng==0.0 || distressMessage==null) return;
+
+                String startLatLng = lat + "," + lng;
+                String endLatLng = distressMessage.lat + "," + distressMessage.lng;
+
+                Intent directionsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?saddr=" + startLatLng + "&daddr=" + endLatLng));
+                startActivity(directionsIntent);
+            }
+
+        });
         inForeground = true;
     }
 
