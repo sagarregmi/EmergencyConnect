@@ -21,10 +21,10 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
     ResponseMessage responseMessage = null;
     private ArrayList data;
 
-    public CustomListViewAdapter(ResponderScreen responderScreen, ArrayList d) {
+    public CustomListViewAdapter(ResponseScreen responseScreen, ArrayList d) {
 
         data = d;
-        activity = responderScreen;
+        activity = responseScreen;
         inflater = ( LayoutInflater )activity.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

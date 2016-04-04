@@ -48,17 +48,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
         <activity
-            android:name=".ResponderScreen"
-            android:label="@string/title_activity_responder_list"
+            android:name=".ResponseScreen"
+            android:label="@string/title_activity_response_screen"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>
-        <activity
-            android:name=".ResponseScreen"
-            android:label="@string/title_activity_response_screen"
-            >
-        </activity>
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

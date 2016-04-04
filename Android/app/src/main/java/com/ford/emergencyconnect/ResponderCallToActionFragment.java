@@ -25,6 +25,7 @@ public class ResponderCallToActionFragment extends Fragment{
     Context context;
     Activity activity;
     Firebase ref;
+    View rootView;
     private IResponderCallToActionCallback callback;
     private ArrayList<ResponseMessage> responseList = new ArrayList<ResponseMessage>();
 
@@ -52,7 +53,7 @@ public class ResponderCallToActionFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(FRAGMENT_TAG, "onCreateView Enter");
-        View rootView = inflater.inflate(R.layout.fragment_calltoaction, container, false);
+        rootView = inflater.inflate(R.layout.fragment_calltoaction, container, false);
         return rootView;
     }
 
@@ -60,8 +61,8 @@ public class ResponderCallToActionFragment extends Fragment{
     public void onStart() {
         super.onStart();
         Log.i(FRAGMENT_TAG, "onStart Enter");
-        Button yesResponse = (Button) activity.findViewById(R.id.yesResponse);
-        yesResponse.setEnabled(false);
+        Button yesResponse = (Button) rootView.findViewById(R.id.yesResponse);
+        //yesResponse.setEnabled(false);
         yesResponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,5 +72,15 @@ public class ResponderCallToActionFragment extends Fragment{
 
         });
 
+    }
+
+    public void enableYesButton() {
+        Log.i(FRAGMENT_TAG, "enableYesButton Enter");
+        if( rootView != null) {
+            Button yesResponse = (Button) rootView.findViewById(R.id.yesResponse);
+            if (yesResponse != null) {
+                yesResponse.setEnabled(true);
+            }
+        }
     }
 }

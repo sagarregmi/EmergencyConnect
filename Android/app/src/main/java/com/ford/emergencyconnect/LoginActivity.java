@@ -233,9 +233,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     i = new Intent(getApplicationContext(), DistressScreen.class);
                 }
                 else if (ecApp.getRole() == 2) {
-                    i = new Intent(getApplicationContext(), ResponderScreen.class);
+                    i = new Intent(getApplicationContext(), ResponseScreen.class);
                     // If Opening a RespondererScreen, set the fragment id for showing Call to Action Buttons
-                    i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_CALL_TO_ACTION);
+                    //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_CALL_TO_ACTION);
                 }
                 ecApp.setCurrentUser(currentUser);
                 //i.putExtra("user", currentUser);
@@ -396,18 +396,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
-
-                /*
-                Log.d(TAG, "Logging in as a " + ec.getRole());
-                // Find the selection from the switch and open the respsective activity
-                // Pass the Selected Role to the next Activity
-                Intent i = new Intent(LoginActivity.this,
-                        (ec.getRole() == ec.ROLE_REGULAR_USER)? DistressScreen.class : ResponseScreen.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("ROLE", ec.getRole());
-                i.putExtras(bundle);
-                startActivity(i);
-                */
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

@@ -8,19 +8,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,9 +27,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -45,85 +38,79 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-public class ResponseScreen extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
-    double lat = 0.0;
-    double lng = 0.0;
-    LocationManager locationManager;
-    private String provider;
-    final String API_KEY = "AIzaSyBbLd62uXZrIQygltPle2l3l88CoT8C8oo";
+/**
+ * Created by sregmi1 on 4/1/16.
+ */
+public class ResponseScreen extends AppCompatActivity implements ResponderListFragment.IResponderListFragmentCallback,
+        MapFragment.IMapFragmentCallback, ResponderCallToActionFragment.IResponderCallToActionCallback{
+
+    private static final String TAG = ResponseScreen.class.getSimpleName();
+    User user;
+    Firebase ref;
     DistressMessage distressMessage;
     String distressKey;
-    Firebase ref;
     int ETA;
     boolean inForeground = false;
-    private User user = null;
-    EmergencyConnectApplication ecApp;
+    private ResponderCallToActionFragment responderCallToActionFragment;
+    private ResponderListFragment responderListFragment;
+    private MapFragment mapFragment;
+    private static boolean initFB = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate Enter initFB = " + initFB);
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.delete_me_activity_response_screen);
+        setContentView(R.layout.activity_responder_screen);
+
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        //User user  = ecApp.getCurrentUser();
+        //if( ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
+        mapFragment = new MapFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_map_msg_fragment_container,
+                mapFragment, MapFragment.FRAGMENT_TAG).commit();
+
+        //Intent intent = getIntent();
+        //int fragmentid = intent.getIntExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_CALL_TO_ACTION);
+        if(ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
+            responderListFragment = new ResponderListFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_calltoaction_fragment_container,
+                    responderListFragment, ResponderListFragment.FRAGMENT_TAG).commit();
+        } else if (ecApp.getRole() == ecApp.ROLE_RESPONDER) {
+            responderCallToActionFragment = new ResponderCallToActionFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_calltoaction_fragment_container,
+                    responderCallToActionFragment, ResponderCallToActionFragment.FRAGMENT_TAG).commit();
+        }
+
+
+        android.support.v7.widget.Toolbar
+                myToolbar = (android.support.v7.widget.Toolbar
+                ) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(getResources().getColor(R.color.LightRed));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setIcon(R.drawable.ec_app_icon);
+        getSupportActionBar().setTitle("Responders");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //Get User
         ecApp = (EmergencyConnectApplication) getApplicationContext();
         user = ecApp.getCurrentUser();
 
-        Firebase.setAndroidContext(this);
-        ref = new Firebase("https://emergencyconnect.firebaseio.com/");
-        initLocation();
-        initFirebase();
+        if( !initFB ) {
+            Firebase.setAndroidContext(this);
+            ref = new Firebase("https://emergencyconnect.firebaseio.com/");
+            //initLocation();
+            initFirebase();
+        }
 
-        Button yesResponse = (Button) findViewById(R.id.yesResponse);
-        yesResponse.setEnabled(false);
-        yesResponse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendResponseMessage();
-            }
-        });
-
-        Button directionsButton = (Button) findViewById(R.id.directionsButton);
-        directionsButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-                if(lat==0.0 || lng==0.0 || distressMessage==null) return;
-
-                String startLatLng = lat + "," + lng;
-                String endLatLng = distressMessage.lat + "," + distressMessage.lng;
-
-                Intent directionsIntent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?saddr=" + startLatLng + "&daddr=" + endLatLng));
-                startActivity(directionsIntent);
-            }
-
-        });
         inForeground = true;
     }
 
-    private void initLocation(){
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Debug", "Permissions error");
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        } else {
-            Log.i("Debug", "Last known location null");
-        }
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy Enter");
+        super.onDestroy();
+        initFB = false;
+        ref = null;
     }
 
     private void initFirebase(){
@@ -131,9 +118,9 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Ignore old messages
-                Log.i("Debug", "Distress Child Added");
+                Log.i(TAG, "Distress Child Added");
                 long time = (long) dataSnapshot.child("timestamp").getValue();
-                Log.i("Debug", new Date().getTime() - time + " ms");
+                Log.i(TAG, new Date().getTime() - time + " ms");
 
                 if (new Date().getTime() - time <= 30000) {
                     distressMessage = new DistressMessage((double) dataSnapshot.child("lat").getValue(),
@@ -144,11 +131,14 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                             dataSnapshot.child("phoneNumber").getValue().toString(),
                             Integer.parseInt(dataSnapshot.child("numPassengers").getValue().toString()));
 
-                    createDistressMessageUI();
+                    if (mapFragment != null) {
+                        mapFragment.createDistressMessageUI(distressMessage);
+                    }
 
                     distressKey = dataSnapshot.getKey();
                     isInRange();
                 }
+                initFB = true;
             }
 
             @Override
@@ -169,37 +159,20 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         });
     }
 
-    private void createDistressMessageUI(){
-
-        if (distressMessage == null) return;
-
-        //TextView tv = (TextView) findViewById(R.id.distress_message);
-        //tv.setText(distressMessage.toString());
-
-        TextView distressName = (TextView) findViewById(R.id.distress_name);
-        TextView distressAge = (TextView) findViewById(R.id.distress_age);
-        TextView distressPreExisting = (TextView) findViewById(R.id.distress_preexisting);
-        TextView distressPhone = (TextView) findViewById(R.id.distress_phone);
-
-        distressName.setText(distressMessage.name);
-        distressAge.setText("" + distressMessage.age);
-        distressPreExisting.setText(distressMessage.preConditions);
-        distressPhone.setText(distressMessage.phoneNumber);
-    }
-
     private void isInRange(){
+        Log.i(TAG, "isInRange Enter");
         final boolean inRange = false;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + distressMessage.lat + "," + distressMessage.lng +
                 "&destination=" + "37.4234775,-122.1420958" + "&key=AIzaSyD2drkOw0W2n6ZAjlkgUCfNc12z0O7E4Jk";
-        Log.i("Debug", url);
+        Log.i(TAG, url);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //Got directions, determine if within 10 minute drive.
-                        Log.i("Debug", response);
+                        Log.i(TAG, response);
                         boolean sentNotif = false;
                         try {
                             JSONObject directions = new JSONObject(response);
@@ -214,28 +187,23 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                                     int legTime = duration.getInt("value");
                                     ETA += legTime;
                                 }
-                                Log.i("Debug", "Travel Time = " + ETA);
+                                Log.i(TAG, "Travel Time = " + ETA);
                                 if(ETA <= 600){
                                     //Within 10 minutes
                                     if(!sentNotif){
                                         //send Notification
                                         sentNotif = true;
                                         if(!inForeground) {
+                                            Log.i(TAG, "isInRange() Activity is not in foreground");
                                             sendNotification();
                                         }else{
-                                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                                                    .findFragmentById(R.id.map);
-                                            LatLng distressLocation = new LatLng(distressMessage.lat, distressMessage.lng);
-                                            GoogleMap map = mapFragment.getMap();
-                                            if(map != null) {
-                                                map.addMarker(new MarkerOptions()
-                                                        .title("DISTRESS")
-                                                        .position(distressLocation));
-                                            }
+                                            MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.responder_screen_map_msg_fragment_container);
+                                            mapFragment.addMarker(distressMessage);
                                         }
                                         //Enable response button
-                                        Button yesResponse = (Button) findViewById(R.id.yesResponse);
-                                        yesResponse.setEnabled(true);
+                                        if( responderCallToActionFragment != null) {
+                                            responderCallToActionFragment.enableYesButton();
+                                        }
                                     }
                                 }
                             }
@@ -247,15 +215,30 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("Debug", "That didn't work!");
+                Log.i(TAG, "That didn't work!");
             }
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
+    protected void onResume() {
+        super.onResume();
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        ecApp.getMyLocation().requestLocationUpdates();
+        inForeground = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        ecApp.getMyLocation().removeUpdates();
+        inForeground = false;
+    }
+
     private void sendNotification(){
-        Log.i("Debug", "Notification Sent");
+        Log.i(TAG, "Notification Sent");
 
         Intent i = new Intent(this, ResponseScreen.class);
         Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
@@ -268,12 +251,12 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
 
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ec_app_logo)
-                .setAutoCancel(true)
-                .setContentTitle("Emergency reported " + ETA/60 + " minutes away!")
-                .setVibrate(new long[]{1000, 1000, 1000})
-                .setContentIntent(resultPendingIntent)
-                .setContentText("Can you help?");
+                        .setSmallIcon(R.drawable.ec_app_logo)
+                        .setAutoCancel(true)
+                        .setContentTitle("Emergency reported " + ETA/60 + " minutes away!")
+                        .setVibrate(new long[]{1000, 1000, 1000})
+                        .setContentIntent(resultPendingIntent)
+                        .setContentText("Can you help?");
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -287,46 +270,27 @@ public class ResponseScreen extends AppCompatActivity implements LocationListene
         ref.child("response").push().setValue(message);
     }
 
-    protected void onResume() {
-        super.onResume();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Debug", "Permissions Error");
-            return;
-        }
-        locationManager.requestLocationUpdates(provider, 400, 1, this);
-        inForeground = true;
+    @Override
+    public void onResponderListFragmentListener() {
+        Log.i(TAG, "onGetStarted Enter");
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Debug", "Permissions Error");
-            return;
-        }
-        locationManager.removeUpdates(this);
-        inForeground = false;
+    public void onMapFragmentListener() {
+        Log.i(TAG, "onGetStarted Enter");
     }
 
+
     @Override
-    public void onLocationChanged(Location location) {
-        lat = location.getLatitude();
-        lng = location.getLongitude();
-    }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {    }
-    @Override
-    public void onProviderEnabled(String provider) {    }
-    @Override
-    public void onProviderDisabled(String provider) {}
-    @Override
-    public void onMapReady(GoogleMap map) {
-        //LatLng here = new LatLng(lat, lng);
-        LatLng hardcoded = new LatLng(37.4234775, -122.1420958);
-        //googleMap.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
-        map.addMarker(new MarkerOptions()
-                .title("You")
-                .position(hardcoded));
+    public void onResponderCallToActionFragmentListener() {
+        Log.i(TAG, "onGetStarted Enter");
+        ResponderListFragment responderListFragment = new ResponderListFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .hide(responderCallToActionFragment)
+                .add(R.id.responder_screen_calltoaction_fragment_container, responderListFragment)
+                .commit();
+
     }
 }

@@ -27,6 +27,7 @@ public class ResponderListFragment extends Fragment implements View.OnClickListe
 
     ListView lv;
     Activity activity;
+    View rootView;
     public static final String FRAGMENT_TAG = "ResponderListFragment";
     private IResponderListFragmentCallback callback;
     Button sendDistress;
@@ -57,46 +58,53 @@ public class ResponderListFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(FRAGMENT_TAG, "onCreateView Enter");
-        View rootView = inflater.inflate(R.layout.fragment_reponder_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_reponder_list, container, false);
         return rootView;
     }
 
 
     @Override
     public void onStart() {
+        Log.i(FRAGMENT_TAG, "onStart Enter");
         super.onStart();
         Intent intent = activity.getIntent();
         distressKey = intent.getStringExtra("distressKey");
         Firebase.setAndroidContext(activity);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
 
-        lv=(ListView) activity.findViewById(R.id.listViewResponder);
-        responseList.add(new ResponseMessage("Sagar", 30, "Basic First Aid" , "214-738-5328", 5,
+        lv=(ListView) rootView.findViewById(R.id.listViewResponder);
+        /*responseList.add(new ResponseMessage("Sagar", 30, "Basic First Aid" , "214-738-5328", 5,
                 "123"));
 
         responseList.add(new ResponseMessage("Regmi", 27, "First Aid", "847-209-5328", 4,
                 "345"));
+        */
 
-        lv.setAdapter(new CustomListViewAdapter((ResponderScreen)activity, responseList));
+        lv.setAdapter(new CustomListViewAdapter((ResponseScreen)activity, responseList));
 
         ref.child("response").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i(FRAGMENT_TAG, "onStart onChildAdded Enter");
                 long time = (long) dataSnapshot.child("timestamp").getValue();
-                if (new Date().getTime() - time <= 30000) {
+                //if (new Date().getTime() - time <= 30000) {
                     Log.i("Debug", dataSnapshot.toString());
+                    Log.i(FRAGMENT_TAG, "onStart onChildAdded Creating New ResponseMessage");
                     ResponseMessage message = new ResponseMessage(dataSnapshot.child("name").getValue().toString(),
                             Integer.parseInt(dataSnapshot.child("age").getValue().toString()),
                             dataSnapshot.child("skills").getValue().toString(),
                             dataSnapshot.child("phoneNumber").getValue().toString(),
                             Integer.parseInt(dataSnapshot.child("ETA").getValue().toString()) / 60,
                             dataSnapshot.child("distressKey").getValue().toString());
-                    Log.i("Debug", message.toString());
+                    Log.i(FRAGMENT_TAG, message.toString());
                     if (message.distressKey.equals(distressKey)) {
+                        Log.i(FRAGMENT_TAG, "onStart onChildAdded Adding Response message to the list");
                         responseList.add(message);
                         lv.invalidateViews();
+                    } else {
+                        Log.i(FRAGMENT_TAG, "onChildAdded message.distressKey not equal to distressKey: " + distressKey);
                     }
-                }
+                //}
             }
 
             @Override

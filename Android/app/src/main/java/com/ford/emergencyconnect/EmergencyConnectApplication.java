@@ -19,9 +19,9 @@ public class EmergencyConnectApplication extends Application{
     public static final int RESPONDER_MODE_DISABLED = 2;
     public static final int RESPONDER_MODE_ENABLED = 3;
 
-    public static final String INTENT_FRAGMENT_ID = "com.ford.emergencyconnect.fragmentid";
-    public static final int FRAGMENT_ID_CALL_TO_ACTION = 1;
-    public static final int FRAGMENT_ID_RESPONDER_LIST = 2;
+    //public static final String INTENT_FRAGMENT_ID = "com.ford.emergencyconnect.fragmentid";
+    //public static final int FRAGMENT_ID_CALL_TO_ACTION = 1;
+    //public static final int FRAGMENT_ID_RESPONDER_LIST = 2;
 
     int appState = DRIVER_MODE_ENABLED; // Default set it to Enabled for the Driver
 
@@ -89,9 +89,6 @@ public class EmergencyConnectApplication extends Application{
         this.mContext = this;
         map = new MyLocation(this);
         map.init();
-
-        //fireBase = new FireBase(this);
-        //fireBase.init();
     }
 
     /*

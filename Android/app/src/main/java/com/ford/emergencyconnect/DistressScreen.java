@@ -24,7 +24,6 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
     private int totalPassengers = 0;
     private User user = null;
     private MyLocation map;
-    //private FireBase fireBase;
     private Firebase ref = null;
     private static final String TAG = DistressScreen.class.getSimpleName();
 
@@ -105,9 +104,9 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
             Firebase newChildref = ref.child("distress").push();
             String distressKey = newChildref.getKey();
             newChildref.setValue(message);
-            Intent i = new Intent(DistressScreen.this, ResponderScreen.class);
+            Intent i = new Intent(DistressScreen.this, ResponseScreen.class);
             i.putExtra("distressKey", distressKey);
-            i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_RESPONDER_LIST);
+            //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_RESPONDER_LIST);
             startActivity(i);
         }
         /* TO-DO

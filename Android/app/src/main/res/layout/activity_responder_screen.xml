@@ -24,7 +24,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             tools:context=".ResponderScreen"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6" >
+
+            <Button
+                android:id="@+id/directionsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:text="Directions"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingRight="5dp"/>
+        </FrameLayout>
 
     <View
         android:layout_width="match_parent"
