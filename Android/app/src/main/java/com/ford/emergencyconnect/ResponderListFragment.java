@@ -23,14 +23,13 @@ import java.util.Date;
 /**
  * Created by sregmi1 on 3/31/16.
  */
-public class ResponderListFragment extends Fragment implements View.OnClickListener {
+public class ResponderListFragment extends Fragment {
 
     ListView lv;
     Activity activity;
     View rootView;
     public static final String FRAGMENT_TAG = "ResponderListFragment";
     private IResponderListFragmentCallback callback;
-    Button sendDistress;
     String distressKey;
     private Firebase ref = null;
     private ArrayList<ResponseMessage> responseList = new ArrayList<ResponseMessage>();
@@ -73,12 +72,6 @@ public class ResponderListFragment extends Fragment implements View.OnClickListe
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
 
         lv=(ListView) rootView.findViewById(R.id.listViewResponder);
-        /*responseList.add(new ResponseMessage("Sagar", 30, "Basic First Aid" , "214-738-5328", 5,
-                "123"));
-
-        responseList.add(new ResponseMessage("Regmi", 27, "First Aid", "847-209-5328", 4,
-                "345"));
-        */
 
         lv.setAdapter(new CustomListViewAdapter((ResponseScreen)activity, responseList));
 
@@ -87,7 +80,8 @@ public class ResponderListFragment extends Fragment implements View.OnClickListe
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.i(FRAGMENT_TAG, "onStart onChildAdded Enter");
                 long time = (long) dataSnapshot.child("timestamp").getValue();
-                //if (new Date().getTime() - time <= 30000) {
+                Log.i(FRAGMENT_TAG, "Difference in ms " + (new Date().getTime() - time));
+                if (new Date().getTime() - time <= 30000) {
                     Log.i("Debug", dataSnapshot.toString());
                     Log.i(FRAGMENT_TAG, "onStart onChildAdded Creating New ResponseMessage");
                     ResponseMessage message = new ResponseMessage(dataSnapshot.child("name").getValue().toString(),
@@ -104,7 +98,7 @@ public class ResponderListFragment extends Fragment implements View.OnClickListe
                     } else {
                         Log.i(FRAGMENT_TAG, "onChildAdded message.distressKey not equal to distressKey: " + distressKey);
                     }
-                //}
+                }
             }
 
             @Override
@@ -124,11 +118,10 @@ public class ResponderListFragment extends Fragment implements View.OnClickListe
             }
         });
     }
-    @Override
-    public void onClick(View v) {
-        Log.i(FRAGMENT_TAG, "onClick Enter");
-        if (v.equals(sendDistress)) {
-            callback.onResponderListFragmentListener();
-        }
+
+    public void setDistressKey(String distressKey) {
+        Log.i(FRAGMENT_TAG, "setDistressKey Enter");
+        this.distressKey = distressKey;
+
     }
 }

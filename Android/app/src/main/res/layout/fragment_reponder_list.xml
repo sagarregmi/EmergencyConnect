@@ -26,8 +26,6 @@
             android:layout_height="wrap_content"
             android:divider="#452446"
             android:dividerHeight="1dip"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
             android:scrollbarStyle="outsideOverlay">
         </ListView>
     </LinearLayout>

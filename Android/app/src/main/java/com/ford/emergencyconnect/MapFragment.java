@@ -89,12 +89,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 .position(hardcoded));
     }
 
-    public void createDistressMessageUI(DistressMessage distressMessage){
+    public void createDistressMessageUI(DistressMessage distressMessage) {
 
         if (distressMessage == null) return;
 
-        //TextView tv = (TextView) findViewById(R.id.distress_message);
-        //tv.setText(distressMessage.toString());
         Log.i(FRAGMENT_TAG, "createDistressMessageUI Enter distressMessage = " + distressMessage.toString());
         TextView distressName = (TextView) rootView.findViewById(R.id.distress_name);
         TextView distressAge = (TextView) rootView.findViewById(R.id.distress_age);
@@ -102,12 +100,31 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         TextView distressPhone = (TextView) rootView.findViewById(R.id.distress_phone);
 
         Log.i(FRAGMENT_TAG, "distressName  = " + distressName);
-        distressName.setText(distressMessage.name);
-        distressAge.setText("" + distressMessage.age);
-        distressPreExisting.setText(distressMessage.preConditions);
-        distressPhone.setText(distressMessage.phoneNumber);
+        distressName.setText("Name: " + distressMessage.name);
+        distressAge.setText("Age: " + distressMessage.age);
+        distressPreExisting.setText("Pre-existing Conditions: " + distressMessage.preConditions);
+        distressPhone.setText("Phone Number: " + distressMessage.phoneNumber);
+        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message Received from:");
     }
 
+    public void updateResponderInfoUI() {
+        Log.i(FRAGMENT_TAG, "updateResponderInfo Enter");
+
+        TextView currentUserName = (TextView) rootView.findViewById(R.id.distress_name);
+        TextView currentUserAge = (TextView) rootView.findViewById(R.id.distress_age);
+        TextView currentUserSkills = (TextView) rootView.findViewById(R.id.distress_preexisting);
+        TextView currentUserPhone = (TextView) rootView.findViewById(R.id.distress_phone);
+
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication)activity.getApplicationContext();
+        User currentUser = ecApp.getCurrentUser();
+        Log.i(FRAGMENT_TAG, "currentUserName  = " + currentUserName);
+        currentUserName.setText("Name: " + currentUser.name);
+        currentUserAge.setText("Age: " + currentUser.age);
+        currentUserSkills.setText("Skills: " + currentUser.skills);
+        currentUserPhone.setText("Phone Number: " + currentUser.phone);
+        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("My Profile");
+
+    }
     @Override
     public void onStart() {
         super.onStart();

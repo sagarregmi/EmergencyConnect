@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class ResponderCallToActionFragment extends Fragment{
 
-    public static final String FRAGMENT_TAG = "ResponderFragment1";
+    public static final String FRAGMENT_TAG = "ResponderCTA";
 
     Context context;
     Activity activity;

@@ -50,6 +50,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
         public TextView tvResponderName;
         public TextView tvResponderSkills;
         public TextView tvETAValue;
+        public TextView tvPhoneNumber;
     }
 
     @Override
@@ -64,6 +65,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
             holder.tvResponderName = (TextView) vi.findViewById(R.id.tvResponderName);
             holder.tvResponderSkills = (TextView) vi.findViewById(R.id.tvResponderSkills);
             holder.tvETAValue = (TextView) vi.findViewById(R.id.tvETAValue);
+            holder.tvPhoneNumber = (TextView) vi.findViewById(R.id.tvResponderPhoneNumber);
 
             vi.setTag( holder );
         }
@@ -83,8 +85,8 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
 
             holder.tvResponderName.setText( responseMessage.getName() );
             holder.tvResponderSkills.setText( responseMessage.getSkills() );
-            holder.tvETAValue.setText( "" + responseMessage.getETA() );
-
+            holder.tvETAValue.setText( "" + responseMessage.getETA() + "Mins" );
+            holder.tvPhoneNumber.setText( "" + responseMessage.getPhoneNumber() );
             vi.setOnClickListener(new OnItemClickListener( position ));
         }
 

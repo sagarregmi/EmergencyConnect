@@ -63,22 +63,27 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
         setContentView(R.layout.activity_responder_screen);
 
         EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
-        //User user  = ecApp.getCurrentUser();
-        //if( ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
         mapFragment = new MapFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_map_msg_fragment_container,
                 mapFragment, MapFragment.FRAGMENT_TAG).commit();
-
         //Intent intent = getIntent();
         //int fragmentid = intent.getIntExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_CALL_TO_ACTION);
         if(ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
+            Intent intent = getIntent();
+            distressKey = intent.getStringExtra("distressKey");
             responderListFragment = new ResponderListFragment();
+            responderListFragment.setDistressKey(distressKey);
             getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_calltoaction_fragment_container,
                     responderListFragment, ResponderListFragment.FRAGMENT_TAG).commit();
+
+
         } else if (ecApp.getRole() == ecApp.ROLE_RESPONDER) {
             responderCallToActionFragment = new ResponderCallToActionFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_calltoaction_fragment_container,
                     responderCallToActionFragment, ResponderCallToActionFragment.FRAGMENT_TAG).commit();
+            if (mapFragment != null) {
+            //    mapFragment.updateResponderInfoUI();
+            }
         }
 
 
@@ -291,6 +296,6 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
                 .hide(responderCallToActionFragment)
                 .add(R.id.responder_screen_calltoaction_fragment_container, responderListFragment)
                 .commit();
-
+        sendResponseMessage();
     }
 }

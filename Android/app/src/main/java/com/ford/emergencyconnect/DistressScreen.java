@@ -91,7 +91,6 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override public void onClick(View v) {
-        Log.i(TAG, "Creating a Distress message");
         NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
         EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
         if( null != ecApp) {
@@ -99,7 +98,7 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
         }
         DistressMessage message = new DistressMessage(map.getLat(), map.getLong(),
                 "Owen", 26, "None", "555-555-5555", passengers.getValue());
-
+        Log.i(TAG, "Creating a Distress message: " + message.toString());
         if( null != ref) {
             Firebase newChildref = ref.child("distress").push();
             String distressKey = newChildref.getKey();
