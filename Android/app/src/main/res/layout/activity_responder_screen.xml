@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff6666"
+    android:weightSum="1">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#d9d9d9"
+        android:elevation="4dp"
+        android:theme="@style/CustomActionBarTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/responder_screen_map_msg_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:context=".ResponderScreen"
+            android:layout_weight="0.6" >
+
+            <Button
+                android:id="@+id/directionsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:text="Directions"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingRight="5dp"/>
+        </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff" />
+
+    <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/responder_screen_calltoaction_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:context=".ResponderScreen"
+            android:layout_weight="0.4" />
+</LinearLayout>

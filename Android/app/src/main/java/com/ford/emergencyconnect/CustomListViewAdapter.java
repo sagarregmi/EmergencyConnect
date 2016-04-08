@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,10 +21,10 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
     ResponseMessage responseMessage = null;
     private ArrayList data;
 
-    public CustomListViewAdapter(ResponderListActivity respondersListActivity, ArrayList d) {
+    public CustomListViewAdapter(ResponseScreen responseScreen, ArrayList d) {
 
         data = d;
-        activity = respondersListActivity;
+        activity = responseScreen;
         inflater = ( LayoutInflater )activity.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -51,6 +50,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
         public TextView tvResponderName;
         public TextView tvResponderSkills;
         public TextView tvETAValue;
+        public TextView tvPhoneNumber;
     }
 
     @Override
@@ -65,6 +65,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
             holder.tvResponderName = (TextView) vi.findViewById(R.id.tvResponderName);
             holder.tvResponderSkills = (TextView) vi.findViewById(R.id.tvResponderSkills);
             holder.tvETAValue = (TextView) vi.findViewById(R.id.tvETAValue);
+            holder.tvPhoneNumber = (TextView) vi.findViewById(R.id.tvResponderPhoneNumber);
 
             vi.setTag( holder );
         }
@@ -74,7 +75,9 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
 
         if(data.size()<=0)
         {
-            holder.tvResponderName.setText("No Data");
+            holder.tvResponderName.setText("0 Responder");
+            holder.tvResponderSkills.setVisibility(View.INVISIBLE);
+            holder.tvPhoneNumber.setVisibility(View.INVISIBLE);
 
         }
         else
@@ -82,10 +85,12 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
             responseMessage = null;
             responseMessage = ( ResponseMessage ) data.get( position );
 
-            holder.tvResponderName.setText( responseMessage.getName() );
-            holder.tvResponderSkills.setText( responseMessage.getSkills() );
-            holder.tvETAValue.setText( "" + responseMessage.getETA() );
-
+            holder.tvResponderSkills.setVisibility(View.VISIBLE);
+            holder.tvPhoneNumber.setVisibility(View.VISIBLE);
+            holder.tvResponderName.setText("Name: " + responseMessage.getName());
+            holder.tvResponderSkills.setText("Skills: " + responseMessage.getSkills() );
+            holder.tvETAValue.setText( "" + responseMessage.getETA() + " Mins" );
+            holder.tvPhoneNumber.setText( "Phone: " + responseMessage.getPhoneNumber() );
             vi.setOnClickListener(new OnItemClickListener( position ));
         }
 
@@ -107,8 +112,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
 
         @Override
         public void onClick(View arg0) {
-            ResponderListActivity sct = (ResponderListActivity)activity;
-            //
+
         }
     }
 

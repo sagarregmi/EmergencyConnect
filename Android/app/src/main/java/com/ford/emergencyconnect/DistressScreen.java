@@ -1,16 +1,7 @@
 package com.ford.emergencyconnect;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -19,34 +10,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
-import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by sregmi1 on 3/15/16.
  */
-public class DistressScreen extends AppCompatActivity implements LocationListener, View.OnClickListener {
-    double lat;
-    double lng;
-    LocationManager locationManager;
-    private String provider;
+public class DistressScreen extends AppCompatActivity implements View.OnClickListener {
+
     private Switch mDisableAppSwitch;
     private NumberPicker numberPicker = null;
     private int totalPassengers = 0;
-    private Firebase ref = null;
     private User user = null;
-
+    private MyLocation map;
+    private Firebase ref = null;
     private static final String TAG = DistressScreen.class.getSimpleName();
 
     @Override
@@ -54,9 +32,6 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distress_screen);
-        //Get User
-        Intent intent = getIntent();
-        user = intent.getExtras().getParcelable("user");
 
         Button sendDistress = (Button) findViewById(R.id.btnCrash);
         sendDistress.setOnClickListener(this);
@@ -68,7 +43,6 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
         setSupportActionBar(myToolbar);
         getSupportActionBar().setIcon(R.drawable.ec_app_icon);
         getSupportActionBar().setTitle("Driver Profile");
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         numberPicker = (NumberPicker)findViewById(R.id.numberPicker);
         numberPicker.setMinValue(0);
@@ -83,7 +57,9 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
                 totalPassengers = newVal;
                 Log.d(TAG, "Total Passengers " + newVal);
                 EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
-                ecApp.setTotalPassengers(totalPassengers);
+                if (null != ecApp) {
+                    ecApp.setTotalPassengers(totalPassengers);
+                }
 
             }
         });
@@ -105,90 +81,55 @@ public class DistressScreen extends AppCompatActivity implements LocationListene
                 }
             }
         });
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        ecApp = (EmergencyConnectApplication) getApplicationContext();
+        map = ecApp.getMyLocation();
 
+        //fireBase.getFirebase();
         Firebase.setAndroidContext(this);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
-
-        // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Debug", "Permissions error");
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        } else {
-            Log.i("Debug", "Last known location null");
-        }
     }
 
     @Override public void onClick(View v) {
-        Log.i(TAG, "Creating a Distress message");
-        //Get passengers
         NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
-        DistressMessage message = new DistressMessage(lat, lng,
-                "Owen", 26, "None", "555-555-5555", passengers.getValue());
-
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        if( null != ecApp) {
+            ecApp.setTotalPassengers(passengers.getValue());
+        }
+        DistressMessage message = new DistressMessage(map.getLat(), map.getLong(),
+                ecApp.getCurrentUser().name,
+                ecApp.getCurrentUser().age,
+                ecApp.getCurrentUser().preConditions,
+                ecApp.getCurrentUser().phone,
+                passengers.getValue());
+        Log.i(TAG, "Creating a Distress message: " + message.toString());
         if( null != ref) {
             Firebase newChildref = ref.child("distress").push();
             String distressKey = newChildref.getKey();
             newChildref.setValue(message);
-            Intent i = new Intent(DistressScreen.this, ResponderListActivity.class);
+            Intent i = new Intent(DistressScreen.this, ResponseScreen.class);
             i.putExtra("distressKey", distressKey);
+            //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_RESPONDER_LIST);
             startActivity(i);
         }
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Debug", "Permissions Error");
-            return;
+        if( map != null) {
+            map.requestLocationUpdates();
         }
-        locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Debug", "Permissions Error");
-            return;
+        if( map != null) {
+            map.removeUpdates();
         }
-        locationManager.removeUpdates(this);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        lat = location.getLatitude();
-        lng = location.getLongitude();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Toast.makeText(this, "Enabled new provider " + provider,
-                Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Toast.makeText(this, "Disabled provider " + provider,
-                Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

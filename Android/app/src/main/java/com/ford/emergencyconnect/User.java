@@ -3,8 +3,6 @@ package com.ford.emergencyconnect;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 public class User implements Parcelable {
 
     public String email;

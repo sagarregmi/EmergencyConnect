@@ -3,15 +3,10 @@ package com.ford.emergencyconnect;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -27,7 +22,6 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -38,7 +32,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,26 +133,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
         });
-
-        /*
-        Button bypassDistress = (Button) findViewById(R.id.bypassDistress);
-        Button bypassResponse = (Button) findViewById(R.id.bypassResponse);
-
-        bypassDistress.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), DistressScreen.class);
-                startActivity(i);
-            }
-        });
-        bypassResponse.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ResponseScreen.class);
-                startActivity(i);
-            }
-        });
-        */
     }
 
     private void populateAutoComplete() {
@@ -261,8 +234,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
                 else if (ecApp.getRole() == 2) {
                     i = new Intent(getApplicationContext(), ResponseScreen.class);
+                    // If Opening a RespondererScreen, set the fragment id for showing Call to Action Buttons
+                    //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_CALL_TO_ACTION);
                 }
-                i.putExtra("user", currentUser);
+                ecApp.setCurrentUser(currentUser);
+                //i.putExtra("user", currentUser);
                 startActivity(i);
             } else {
                 mEmailView.setError(getString(R.string.error_email_password_nomatch));
@@ -420,16 +396,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
-
-                Log.d(TAG, "Logging in as a " + ec.getRole());
-                // Find the selection from the switch and open the respsective activity
-                // Pass the Selected Role to the next Activity
-                Intent i = new Intent(LoginActivity.this,
-                        (ec.getRole() == ec.ROLE_REGULAR_USER)? DistressScreen.class : ResponseScreen.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("ROLE", ec.getRole());
-                i.putExtras(bundle);
-                startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
