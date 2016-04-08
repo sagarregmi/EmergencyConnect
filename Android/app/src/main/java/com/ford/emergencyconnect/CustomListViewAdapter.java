@@ -89,7 +89,7 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
             holder.tvPhoneNumber.setVisibility(View.VISIBLE);
             holder.tvResponderName.setText("Name: " + responseMessage.getName());
             holder.tvResponderSkills.setText("Skills: " + responseMessage.getSkills() );
-            holder.tvETAValue.setText( "ETA " + responseMessage.getETA() + " Mins" );
+            holder.tvETAValue.setText( "" + responseMessage.getETA() + " Mins" );
             holder.tvPhoneNumber.setText( "Phone: " + responseMessage.getPhoneNumber() );
             vi.setOnClickListener(new OnItemClickListener( position ));
         }
