@@ -64,6 +64,21 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                              Bundle savedInstanceState) {
         Log.i(FRAGMENT_TAG, "onCreateView Enter");
         rootView = inflater.inflate(R.layout.fragment_map_msg, container, false);
+
+        TextView currentUserName = (TextView) rootView.findViewById(R.id.distress_name);
+        TextView currentUserAge = (TextView) rootView.findViewById(R.id.distress_age);
+        TextView currentUserPreExisting = (TextView) rootView.findViewById(R.id.distress_preexisting);
+        TextView currentUserPhone = (TextView) rootView.findViewById(R.id.distress_phone);
+
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication)activity.getApplicationContext();
+        User currentUser = ecApp.getCurrentUser();
+        Log.i(FRAGMENT_TAG, "currentUserName  = " + currentUserName);
+        currentUserName.setText("Name: " + currentUser.name);
+        currentUserAge.setText("Age: " + currentUser.age);
+        currentUserPreExisting.setText("Pre-existing Conditions: " + currentUser.skills);
+        currentUserPhone.setText("Phone Number: " + currentUser.phone);
+        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message");
+
         return rootView;
     }
 
@@ -75,13 +90,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
+        /*
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        if(ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
+            updateResponderInfoUI();
+        }*/
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         //LatLng here = new LatLng(lat, lng);
-        LatLng hardcoded = new LatLng(37.4234775, -122.1420958);
+        LatLng hardcoded = new LatLng(37.40, -122.1420958);
         //googleMap.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
         map.addMarker(new MarkerOptions()
@@ -104,7 +123,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         distressAge.setText("Age: " + distressMessage.age);
         distressPreExisting.setText("Pre-existing Conditions: " + distressMessage.preConditions);
         distressPhone.setText("Phone Number: " + distressMessage.phoneNumber);
-        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message Received from:");
+        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message:");
     }
 
     public void updateResponderInfoUI() {

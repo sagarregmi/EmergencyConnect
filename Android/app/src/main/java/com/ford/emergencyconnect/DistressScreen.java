@@ -97,7 +97,11 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
             ecApp.setTotalPassengers(passengers.getValue());
         }
         DistressMessage message = new DistressMessage(map.getLat(), map.getLong(),
-                "Owen", 26, "None", "555-555-5555", passengers.getValue());
+                ecApp.getCurrentUser().name,
+                ecApp.getCurrentUser().age,
+                ecApp.getCurrentUser().preConditions,
+                ecApp.getCurrentUser().phone,
+                passengers.getValue());
         Log.i(TAG, "Creating a Distress message: " + message.toString());
         if( null != ref) {
             Firebase newChildref = ref.child("distress").push();
@@ -108,16 +112,6 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
             //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_RESPONDER_LIST);
             startActivity(i);
         }
-        /* TO-DO
-        String distressKey = fireBase.sendDistressMessage();
-
-        if( null != distressKey) {
-            Intent i = new Intent(DistressScreen.this, ResponderScreen.class);
-            i.putExtra("distressKey", distressKey);
-            startActivity(i);
-        }
-        */
-
     }
 
     @Override
