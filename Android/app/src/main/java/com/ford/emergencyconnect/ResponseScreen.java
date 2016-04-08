@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -66,6 +69,7 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
         mapFragment = new MapFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_map_msg_fragment_container,
                 mapFragment, MapFragment.FRAGMENT_TAG).commit();
+
         //Intent intent = getIntent();
         //int fragmentid = intent.getIntExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_CALL_TO_ACTION);
         if(ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
@@ -75,15 +79,15 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
             responderListFragment.setDistressKey(distressKey);
             getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_calltoaction_fragment_container,
                     responderListFragment, ResponderListFragment.FRAGMENT_TAG).commit();
+            //LinearLayout ll = (LinearLayout) findViewById(R.id.responderInfoContainer);
+            //ll.removeAllViews();
 
 
         } else if (ecApp.getRole() == ecApp.ROLE_RESPONDER) {
             responderCallToActionFragment = new ResponderCallToActionFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.responder_screen_calltoaction_fragment_container,
                     responderCallToActionFragment, ResponderCallToActionFragment.FRAGMENT_TAG).commit();
-            if (mapFragment != null) {
-            //    mapFragment.updateResponderInfoUI();
-            }
+
         }
 
 
@@ -106,6 +110,26 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
             //initLocation();
             initFirebase();
         }
+
+        Button directionsButton = (Button) findViewById(R.id.directionsButton);
+        directionsButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                double lat = ecApp.getMyLocation().getLat();
+                double lng = ecApp.getMyLocation().getLong();
+                if(lat==0.0 || lng==0.0 || distressMessage==null) return;
+
+                String startLatLng = lat + "," + lng;
+                String endLatLng = distressMessage.lat + "," + distressMessage.lng;
+
+                Intent directionsIntent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?saddr=" + startLatLng + "&daddr=" + endLatLng));
+                startActivity(directionsIntent);
+            }
+
+        });
 
         inForeground = true;
     }
@@ -271,7 +295,10 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
     }
 
     private void sendResponseMessage(){
-        ResponseMessage message = new ResponseMessage("Owen", 26, "CPR", "555-555-5555", ETA, distressKey);
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+        ResponseMessage message = new ResponseMessage(ecApp.getCurrentUser().name,
+                ecApp.getCurrentUser().age, ecApp.getCurrentUser().skills,
+                ecApp.getCurrentUser().phone, ETA, distressKey);
         ref.child("response").push().setValue(message);
     }
 
@@ -285,11 +312,11 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
         Log.i(TAG, "onGetStarted Enter");
     }
 
-
     @Override
     public void onResponderCallToActionFragmentListener() {
         Log.i(TAG, "onGetStarted Enter");
         ResponderListFragment responderListFragment = new ResponderListFragment();
+        responderListFragment.setDistressKey(distressKey);
         getSupportFragmentManager()
                 .beginTransaction()
                 .addToBackStack(null)

@@ -66,8 +66,6 @@ public class ResponderListFragment extends Fragment {
     public void onStart() {
         Log.i(FRAGMENT_TAG, "onStart Enter");
         super.onStart();
-        Intent intent = activity.getIntent();
-        distressKey = intent.getStringExtra("distressKey");
         Firebase.setAndroidContext(activity);
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
 

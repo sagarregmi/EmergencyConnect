@@ -5,19 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:id="@+id/button_calltoaction"
     android:background="@color/LightRed2">
 
+    <TextView
+        android:id="@+id/totalResponders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Responder List"
+        android:textSize="20sp"
+        android:layout_marginRight="5dp"
+        android:textStyle="bold"
+        android:textColor="@color/White"
+        android:layout_gravity="center"/>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+
         android:background="@drawable/border">
 
         <ListView

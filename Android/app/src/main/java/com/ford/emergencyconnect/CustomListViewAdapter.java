@@ -75,7 +75,9 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
 
         if(data.size()<=0)
         {
-            holder.tvResponderName.setText("No Data");
+            holder.tvResponderName.setText("0 Responder");
+            holder.tvResponderSkills.setVisibility(View.INVISIBLE);
+            holder.tvPhoneNumber.setVisibility(View.INVISIBLE);
 
         }
         else
@@ -83,10 +85,12 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
             responseMessage = null;
             responseMessage = ( ResponseMessage ) data.get( position );
 
-            holder.tvResponderName.setText( responseMessage.getName() );
-            holder.tvResponderSkills.setText( responseMessage.getSkills() );
-            holder.tvETAValue.setText( "" + responseMessage.getETA() + "Mins" );
-            holder.tvPhoneNumber.setText( "" + responseMessage.getPhoneNumber() );
+            holder.tvResponderSkills.setVisibility(View.VISIBLE);
+            holder.tvPhoneNumber.setVisibility(View.VISIBLE);
+            holder.tvResponderName.setText("Name: " + responseMessage.getName());
+            holder.tvResponderSkills.setText("Skills: " + responseMessage.getSkills() );
+            holder.tvETAValue.setText( "ETA " + responseMessage.getETA() + " Mins" );
+            holder.tvPhoneNumber.setText( "Phone: " + responseMessage.getPhoneNumber() );
             vi.setOnClickListener(new OnItemClickListener( position ));
         }
 
