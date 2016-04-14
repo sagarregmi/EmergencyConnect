@@ -222,7 +222,8 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
                                     if(!sentNotif){
                                         //send Notification
                                         sentNotif = true;
-                                        if(!inForeground) {
+                                        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+                                        if(!inForeground && ecApp.getRole() == ecApp.ROLE_RESPONDER) {
                                             Log.i(TAG, "isInRange() Activity is not in foreground");
                                             sendNotification();
                                         }else{
@@ -291,7 +292,7 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotificationManager.notify(001, mBuilder.build());
-
+        initFB = false;
     }
 
     private void sendResponseMessage(){
