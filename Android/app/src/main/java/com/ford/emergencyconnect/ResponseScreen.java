@@ -326,4 +326,8 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
                 .commit();
         sendResponseMessage();
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }
