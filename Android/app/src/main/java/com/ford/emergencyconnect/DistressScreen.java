@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 
@@ -19,6 +20,9 @@ import com.firebase.client.Firebase;
  */
 public class DistressScreen extends AppCompatActivity implements View.OnClickListener {
 
+    private TextView tvName;
+    private TextView tvAddress;
+    private Button btnLogout;
     private Switch mDisableAppSwitch;
     private NumberPicker numberPicker = null;
     private int totalPassengers = 0;
@@ -33,6 +37,8 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distress_screen);
 
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+
         Button sendDistress = (Button) findViewById(R.id.btnCrash);
         sendDistress.setOnClickListener(this);
 
@@ -44,6 +50,10 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setIcon(R.drawable.ec_app_icon);
         getSupportActionBar().setTitle("Driver Profile");
 
+        tvName = (TextView)findViewById(R.id.tvUserName);
+        tvAddress = (TextView)findViewById(R.id.tvUserAddress);
+        tvName.setText(ecApp.getCurrentUser().name);
+        tvAddress.setText("Palo Alto, CA");
         numberPicker = (NumberPicker)findViewById(R.id.numberPicker);
         numberPicker.setMinValue(0);
         numberPicker.setMaxValue(10);
@@ -64,24 +74,9 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        mDisableAppSwitch = (Switch) findViewById(R.id.distressScreenSwitch);
+        btnLogout = ( Button) findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(this);
 
-        mDisableAppSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
-                if (isChecked) {
-                    mDisableAppSwitch.setChecked(true);
-                    Log.d(TAG, "App is Disabled");
-                    ecApp.setAppState(ecApp.DRIVER_MODE_DISABLED);
-                } else {
-                    mDisableAppSwitch.setChecked(false);
-                    Log.d(TAG, "App is Enabled");
-                    ecApp.setAppState(ecApp.DRIVER_MODE_ENABLED);
-                }
-            }
-        });
-        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
         ecApp = (EmergencyConnectApplication) getApplicationContext();
         map = ecApp.getMyLocation();
 
@@ -90,28 +85,36 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
         ref = new Firebase("https://emergencyconnect.firebaseio.com/");
     }
 
-    @Override public void onClick(View v) {
-        NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
-        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
-        if( null != ecApp) {
-            ecApp.setTotalPassengers(passengers.getValue());
-        }
-        DistressMessage message = new DistressMessage(map.getLat(), map.getLong(),
-                ecApp.getCurrentUser().name,
-                ecApp.getCurrentUser().age,
-                ecApp.getCurrentUser().preConditions,
-                ecApp.getCurrentUser().phone,
-                passengers.getValue());
-        Log.i(TAG, "Creating a Distress message: " + message.toString());
-        if( null != ref) {
-            Firebase newChildref = ref.child("distress").push();
-            String distressKey = newChildref.getKey();
-            newChildref.setValue(message);
-            Intent i = new Intent(DistressScreen.this, ResponseScreen.class);
-            i.putExtra("distressKey", distressKey);
-            //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_RESPONDER_LIST);
+    @Override
+    public void onClick(View v) {
+        if(v == findViewById(R.id.btnCrash)) {
+            NumberPicker passengers = (NumberPicker) findViewById(R.id.numberPicker);
+            EmergencyConnectApplication ecApp = (EmergencyConnectApplication) getApplicationContext();
+            if( null != ecApp) {
+                ecApp.setTotalPassengers(passengers.getValue());
+            }
+            DistressMessage message = new DistressMessage(map.getLat(), map.getLong(),
+                    ecApp.getCurrentUser().name,
+                    ecApp.getCurrentUser().age,
+                    ecApp.getCurrentUser().preConditions,
+                    ecApp.getCurrentUser().phone,
+                    passengers.getValue());
+            Log.i(TAG, "Creating a Distress message: " + message.toString());
+            if( null != ref) {
+                Firebase newChildref = ref.child("distress").push();
+                String distressKey = newChildref.getKey();
+                newChildref.setValue(message);
+                Intent i = new Intent(DistressScreen.this, ResponseScreen.class);
+                i.putExtra("distressKey", distressKey);
+                //i.putExtra(ecApp.INTENT_FRAGMENT_ID, ecApp.FRAGMENT_ID_RESPONDER_LIST);
+                startActivity(i);
+            }
+        } else if( v == findViewById(R.id.btnLogout)) {
+            finishAffinity();
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
         }
+
     }
 
     @Override
@@ -136,5 +139,9 @@ public class DistressScreen extends AppCompatActivity implements View.OnClickLis
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_actionbar, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

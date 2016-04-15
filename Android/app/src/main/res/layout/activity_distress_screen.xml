@@ -66,7 +66,7 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sagar Regmi"
+                    android:text="Name"
                     android:textColor="@color/LightRed"
                     android:textStyle="bold"
                     android:textSize="20dp" />
@@ -75,19 +75,10 @@
                     android:id="@+id/tvUserAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="San Jose, CA"
+                    android:text="Address"
                     android:textSize="16dp"
                     android:textColor="@color/LightRed"
                     android:layout_marginTop="10dp"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:text="Logout"
-                    android:textColor="@color/White"
-                    android:id="@+id/button"
-                    android:background="@color/Green"
-                    android:layout_marginTop="5dp"/>
 
             </LinearLayout>
 
@@ -156,31 +147,14 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Disable App"
-            android:textColor="@color/LightRed"
-            android:textSize="20dp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold" />
-
-        <Switch
-            android:id="@+id/distressScreenSwitch"
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOff="ON"
-            android:textOn="OFF"
-            android:thumb="@drawable/customswitchselector"
-            android:track="@drawable/custom_track"
-            android:layout_centerHorizontal="true"
-            android:showText="true"
+            android:layout_height="34dp"
+            android:text="Logout"
             android:textColor="@color/White"
-            android:textSize="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:id="@+id/btnLogout"
+            android:background="@color/Green"
+            android:layout_marginTop="5dp"/>
     </LinearLayout>
 
 
