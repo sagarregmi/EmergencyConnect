@@ -39,7 +39,7 @@
             android:textColor="@color/White"
             android:textSize="50sp"
             android:gravity="center"
-            android:background="@color/Green"
+            android:background="#ff0000"
             android:layout_weight="0.5"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             />

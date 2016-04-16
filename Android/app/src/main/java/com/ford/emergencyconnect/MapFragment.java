@@ -2,6 +2,7 @@ package com.ford.emergencyconnect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,6 +40,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     Button sendDistress;
     private Activity activity;
     View rootView;
+    private Button btnLogout;
 
     public interface IMapFragmentCallback {
         void onMapFragmentListener();
@@ -70,6 +72,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         TextView currentUserPreExisting = (TextView) rootView.findViewById(R.id.distress_preexisting);
         TextView currentUserPhone = (TextView) rootView.findViewById(R.id.distress_phone);
 
+        /*
         EmergencyConnectApplication ecApp = (EmergencyConnectApplication)activity.getApplicationContext();
         User currentUser = ecApp.getCurrentUser();
         Log.i(FRAGMENT_TAG, "currentUserName  = " + currentUserName);
@@ -78,6 +81,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         currentUserPreExisting.setText("Pre-existing Conditions: " + currentUser.skills);
         currentUserPhone.setText("Phone Number: " + currentUser.phone);
         ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message");
+        */
+        btnLogout = (Button)rootView.findViewById(R.id.btnResponseLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.finishAffinity();
+                Intent i = new Intent(activity, LoginActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         return rootView;
     }

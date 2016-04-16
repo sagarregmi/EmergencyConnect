@@ -62,7 +62,7 @@ public class ResponderCallToActionFragment extends Fragment{
         super.onStart();
         Log.i(FRAGMENT_TAG, "onStart Enter");
         Button yesResponse = (Button) rootView.findViewById(R.id.yesResponse);
-        //yesResponse.setEnabled(false);
+        yesResponse.setEnabled(false);
         yesResponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
