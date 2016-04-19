@@ -23,7 +23,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -181,7 +183,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             Log.i(FRAGMENT_TAG, "Adding Marker to the Map lat = " + distressMessage.lat + " long = " + distressMessage.lng);
             map.addMarker(new MarkerOptions()
                     .title("DISTRESS")
-                    .position(distressLocation));
+                    .position(distressLocation)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(new LatLng(37.40, -122.1420958));
+            builder.include(distressLocation);
+            LatLngBounds bounds = builder.build();
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
         }
     }
 }
