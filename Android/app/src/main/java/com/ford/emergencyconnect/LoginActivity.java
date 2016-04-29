@@ -418,7 +418,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         User userFive = new User("five@ford.com", "12345", "Test Five", "555-555-5555", 45, "Surgery", "PTSD", "Distress");
 
         User demoOne = new User("nstanley@gmail.com", "12345", "Nicole Stanley", "734-555-7328", 35, "N/A", "Asthma, Epilepsy", "Distress");
-        User demoTwo = new User("cgarvia@gmail.com", "12345", "Carl Garcia", "650-555-1258", 23, "Basic First-aid", "N/A", "Response");
+        User demoTwo = new User("cgarcia@gmail.com", "12345", "Carl Garcia", "650-555-1258", 23, "Basic First-aid", "N/A", "Response");
         User demoThree = new User("lsavard@gmail.com", "12345", "Linette Savard", "415-555-7735", 47, "Trauma Triage, CPR", "N/A", "Response");
 
         User ocarpen4 = new User("ocarpen4@ford.com", "12345", "Owen Carpenter", "555-555-5555", 99, "None", "None", "Response");
