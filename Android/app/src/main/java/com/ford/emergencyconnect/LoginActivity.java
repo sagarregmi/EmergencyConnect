@@ -417,6 +417,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         User userFour = new User("four@ford.com", "12345", "Test Four", "555-444-5555", 44, "Bandage Dressing", "Depression", "Response");
         User userFive = new User("five@ford.com", "12345", "Test Five", "555-555-5555", 45, "Surgery", "PTSD", "Distress");
 
+        User demoOne = new User("nstanley@gmail.com", "12345", "Nicole Stanley", "734-555-7328", 35, "N/A", "Asthma, Epilepsy", "Distress");
+        User demoTwo = new User("cgarvia@gmail.com", "12345", "Carl Garcia", "650-555-1258", 23, "Basic First-aid", "N/A", "Response");
+        User demoThree = new User("lsavard@gmail.com", "12345", "Linette Savard", "415-555-7735", 47, "Trauma Triage, CPR", "N/A", "Response");
+
         User ocarpen4 = new User("ocarpen4@ford.com", "12345", "Owen Carpenter", "555-555-5555", 99, "None", "None", "Response");
         User skanna = new User("skanna@ford.com", "12345", "Srilaxmi Kanna", "555-555-5555", 99, "None", "None", "Response");
         User sregmi1 = new User("sregmi1@ford.com", "12345", "Sagar Regmi", "555-555-5555", 99, "None", "None", "Response");
@@ -427,6 +431,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         userDb.createUser(userThree);
         userDb.createUser(userFour);
         userDb.createUser(userFive);
+
+        userDb.createUser(demoOne);
+        userDb.createUser(demoTwo);
+        userDb.createUser(demoThree);
 
         userDb.createUser(ocarpen4);
         userDb.createUser(skanna);
