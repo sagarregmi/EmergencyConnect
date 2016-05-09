@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -43,6 +44,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     private Activity activity;
     View rootView;
     private Button btnLogout;
+    Marker distressMarker, Responder1Marker, Responder2Marker;
 
     public interface IMapFragmentCallback {
         void onMapFragmentListener();
@@ -74,16 +76,18 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         TextView currentUserPreExisting = (TextView) rootView.findViewById(R.id.distress_preexisting);
         TextView currentUserPhone = (TextView) rootView.findViewById(R.id.distress_phone);
 
-        /*
-        EmergencyConnectApplication ecApp = (EmergencyConnectApplication)activity.getApplicationContext();
-        User currentUser = ecApp.getCurrentUser();
-        Log.i(FRAGMENT_TAG, "currentUserName  = " + currentUserName);
-        currentUserName.setText("Name: " + currentUser.name);
-        currentUserAge.setText("Age: " + currentUser.age);
-        currentUserPreExisting.setText("Pre-existing Conditions: " + currentUser.skills);
-        currentUserPhone.setText("Phone Number: " + currentUser.phone);
-        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message");
-        */
+        TextView distressName_title = (TextView) rootView.findViewById(R.id.distress_name_title);
+        TextView distressAge_title = (TextView) rootView.findViewById(R.id.distress_age_title);
+        TextView distressPreExisting_title = (TextView) rootView.findViewById(R.id.distress_preexisting_title);
+        TextView distressPhone_title = (TextView) rootView.findViewById(R.id.distress_phone_title);
+        distressName_title.setVisibility(View.INVISIBLE);
+        distressAge_title.setVisibility(View.INVISIBLE);
+        distressPreExisting_title.setVisibility(View.INVISIBLE);
+        distressPhone_title.setVisibility(View.INVISIBLE);
+
+        View v = (View)rootView.findViewById(R.id.distressMessageUIViewSeparator);
+        v.setVisibility(View.INVISIBLE);
+
         btnLogout = (Button)rootView.findViewById(R.id.btnResponseLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +123,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         LatLng hardcoded = new LatLng(37.40, -122.1420958);
         //googleMap.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
-        map.addMarker(new MarkerOptions()
+        Responder1Marker = map.addMarker(new MarkerOptions()
                 .title("You")
                 .position(hardcoded));
     }
@@ -135,13 +139,26 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         TextView distressPhone = (TextView) rootView.findViewById(R.id.distress_phone);
 
         Log.i(FRAGMENT_TAG, "distressName  = " + distressName);
-        distressName.setText("Name: " + distressMessage.name);
-        distressAge.setText("Age: " + distressMessage.age);
-        distressPreExisting.setText("Pre-existing Conditions: " + distressMessage.preConditions);
-        distressPhone.setText("Phone Number: " + distressMessage.phoneNumber);
-        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message:");
+        distressName.setText("" + distressMessage.name);
+        distressAge.setText(""+distressMessage.age);
+        distressPreExisting.setText(""+distressMessage.preConditions);
+        distressPhone.setText(""+distressMessage.phoneNumber);
+        ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("Distress Message");
+
+        TextView distressName_title = (TextView) rootView.findViewById(R.id.distress_name_title);
+        TextView distressAge_title = (TextView) rootView.findViewById(R.id.distress_age_title);
+        TextView distressPreExisting_title = (TextView) rootView.findViewById(R.id.distress_preexisting_title);
+        TextView distressPhone_title = (TextView) rootView.findViewById(R.id.distress_phone_title);
+        distressName_title.setVisibility(View.VISIBLE);
+        distressAge_title.setVisibility(View.VISIBLE);
+        distressPreExisting_title.setVisibility(View.VISIBLE);
+        distressPhone_title.setVisibility(View.VISIBLE);
+
+        View v = (View)rootView.findViewById(R.id.distressMessageUIViewSeparator);
+        v.setVisibility(View.VISIBLE);
     }
 
+    /*
     public void updateResponderInfoUI() {
         Log.i(FRAGMENT_TAG, "updateResponderInfo Enter");
 
@@ -153,13 +170,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         EmergencyConnectApplication ecApp = (EmergencyConnectApplication)activity.getApplicationContext();
         User currentUser = ecApp.getCurrentUser();
         Log.i(FRAGMENT_TAG, "currentUserName  = " + currentUserName);
-        currentUserName.setText("Name: " + currentUser.name);
-        currentUserAge.setText("Age: " + currentUser.age);
-        currentUserSkills.setText("Skills: " + currentUser.skills);
-        currentUserPhone.setText("Phone Number: " + currentUser.phone);
+        currentUserName.setText(currentUser.name);
+        currentUserAge.setText(currentUser.age);
+        currentUserSkills.setText(currentUser.skills);
+        currentUserPhone.setText(currentUser.phone);
         ((TextView) rootView.findViewById(R.id.responseScreenMsg)).setText("My Profile");
-
     }
+*/
     @Override
     public void onStart() {
         super.onStart();
@@ -181,7 +198,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         GoogleMap map = mapFragment.getMap();
         if(map != null) {
             Log.i(FRAGMENT_TAG, "Adding Marker to the Map lat = " + distressMessage.lat + " long = " + distressMessage.lng);
-            map.addMarker(new MarkerOptions()
+            distressMarker = map.addMarker(new MarkerOptions()
                     .title("DISTRESS")
                     .position(distressLocation)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
@@ -192,5 +209,37 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             LatLngBounds bounds = builder.build();
             map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
         }
+    }
+
+    public void updateMarkerResponder1() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        GoogleMap map = mapFragment.getMap();
+        LatLng hardcoded = new LatLng(37.4000958, -122.14166);
+
+        //Responder1Marker.remove();
+        //distressMarker.remove();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
+        Marker responder1Marker = map.addMarker(new MarkerOptions()
+                .title("1st Responder Arrived")
+                .position(hardcoded)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        responder1Marker.showInfoWindow();
+    }
+
+    public void updateMarkerResponder2() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        GoogleMap map = mapFragment.getMap();
+        LatLng hardcoded = new LatLng(37.399712, -122.142063);
+
+        //Responder1Marker.remove();
+        //distressMarker.remove();
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
+        Marker responder2Marker = map.addMarker(new MarkerOptions()
+                .title("2nd Responder Arrived")
+                .position(hardcoded)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        responder2Marker.showInfoWindow();
     }
 }

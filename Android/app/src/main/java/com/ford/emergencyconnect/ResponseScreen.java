@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -97,7 +98,12 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
         myToolbar.setTitleTextColor(getResources().getColor(R.color.LightRed));
         setSupportActionBar(myToolbar);
         getSupportActionBar().setIcon(R.drawable.ec_app_icon);
-        getSupportActionBar().setTitle("Responders");
+        if(ecApp.getRole() == ecApp.ROLE_REGULAR_USER) {
+            getSupportActionBar().setTitle("Driver");
+        } else {
+            getSupportActionBar().setTitle("Responders");
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //Get User
@@ -228,7 +234,10 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
                                             sendNotification();
                                         }else{
                                             MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.responder_screen_map_msg_fragment_container);
-                                            mapFragment.addMarker(distressMessage);
+                                            if( mapFragment != null ) {
+                                                mapFragment.addMarker(distressMessage);
+                                            }
+
                                         }
                                         //Enable response button
                                         if( responderCallToActionFragment != null) {
@@ -304,8 +313,17 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
     }
 
     @Override
-    public void onResponderListFragmentListener() {
+    public void onResponderListFragmentListener(int responder) {
         Log.i(TAG, "onGetStarted Enter");
+        MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.responder_screen_map_msg_fragment_container);
+        if( mapFragment != null ) {
+            if(responder == 1) {
+                mapFragment.updateMarkerResponder1();
+            } else {
+                mapFragment.updateMarkerResponder2();
+            }
+
+        }
     }
 
     @Override
