@@ -1,98 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ResponderListActivity"
-    android:textColor="@color/Green"
-    android:weightSum="1">
+    >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="0.85"
         android:weightSum="1"
-        android:background="@color/Grey">
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tvResponderName"
-            android:layout_height="wrap_content"
+        android:background="@color/Grey"
+        android:orientation="horizontal">
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:maxLines="3"
-            android:ellipsize="end"
-            android:text="Name(Age):"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_weight="1"
-            />
+            android:layout_height="match_parent"
+            android:background="@color/Grey"
+            android:layout_weight="0.7"
+            android:weightSum="1"
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@+id/containerETA"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tvResponderSkills"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.07"
+                android:weightSum="3">
+                <TextView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tvResponderNameTitle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:text="Name:"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:textStyle="bold" />
 
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:text="Skills:"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_weight="1"
-            />
+                <TextView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tvResponderSkillsTitle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="Skills:"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:textStyle="bold" />
 
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tvResponderPhoneNumber"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+                <TextView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tvResponderPhoneNumberTitle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Phone:"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:textStyle="bold" />
+                </LinearLayout>
+            <!--
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/Red"
+                android:layout_marginBottom="1dp"
+                android:id="@+id/responderListUIViewSeparator"
+                android:layout_marginRight="3dp"
+                android:orientation="horizontal" /> -->
 
-            android:text="Phone:"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_weight="1"
-            />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="3">
+                <TextView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tvResponderName"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:text="Name"
+                    android:textSize="12dp"
+                    android:textColor="@color/Red"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tvResponderSkills"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="Skills"
+                    android:textSize="12dp"
+                    android:textColor="@color/Red"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tvResponderPhoneNumber"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Phone"
+                    android:textSize="12dp"
+                    android:textColor="@color/Red"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_weight="0.15"
-        android:background="@color/Green"
-        android:layout_gravity="center"
-        >
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tvETAValue"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:maxLines="1"
-            android:text="ETA"
-            android:textSize="20dp"
-            android:textColor="@color/White"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.3"
+            android:background="@color/Green"
             android:layout_gravity="center"
-            />
-    </LinearLayout>
-
-
-
+            android:id="@+id/containerETA"
+            android:gravity="center_vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+            <TextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tvETAValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:maxLines="1"
+                android:text="ETA"
+                android:textSize="20dp"
+                android:textColor="@color/White"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
+            </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:background="@color/Red"
+        android:layout_marginBottom="1dp"/>
 </LinearLayout>

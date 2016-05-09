@@ -2,7 +2,6 @@ package com.ford.emergencyconnect;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.Button;
 
 import com.firebase.client.Firebase;
 import android.support.v4.app.Fragment;
+
 
 import java.util.ArrayList;
 
@@ -62,7 +62,7 @@ public class ResponderCallToActionFragment extends Fragment{
         super.onStart();
         Log.i(FRAGMENT_TAG, "onStart Enter");
         Button yesResponse = (Button) rootView.findViewById(R.id.yesResponse);
-        yesResponse.setEnabled(false);
+        //yesResponse.setEnabled(false);
         yesResponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,5 +82,9 @@ public class ResponderCallToActionFragment extends Fragment{
                 yesResponse.setEnabled(true);
             }
         }
+    }
+
+    public void updateArrivalTime() {
+        Log.i(FRAGMENT_TAG, "updateArrivalTime Enter");
     }
 }
