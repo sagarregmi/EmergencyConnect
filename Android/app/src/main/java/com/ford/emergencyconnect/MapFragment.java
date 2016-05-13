@@ -120,12 +120,19 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     @Override
     public void onMapReady(GoogleMap map) {
         //LatLng here = new LatLng(lat, lng);
-        LatLng hardcoded = new LatLng(37.40, -122.1420958);
-        //googleMap.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
-        Responder1Marker = map.addMarker(new MarkerOptions()
-                .title("You")
-                .position(hardcoded));
+
+        EmergencyConnectApplication ecApp = (EmergencyConnectApplication) activity.getApplication();
+        if( ecApp.getRole() != EmergencyConnectApplication.ROLE_REGULAR_USER) {
+            ecApp = (EmergencyConnectApplication) activity.getApplicationContext();
+            double lat = ecApp.getMyLocation().getLat();
+            double lng = ecApp.getMyLocation().getLong();
+            LatLng hardcoded = new LatLng(lat, lng);
+            //googleMap.setMyLocationEnabled(true);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
+            Responder1Marker = map.addMarker(new MarkerOptions()
+                    .title("You")
+                    .position(hardcoded));
+        }
     }
 
     public void createDistressMessageUI(DistressMessage distressMessage) {
@@ -204,10 +211,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(new LatLng(37.40, -122.1420958));
+            EmergencyConnectApplication ecApp = (EmergencyConnectApplication) activity.getApplicationContext();
+            double lat = ecApp.getMyLocation().getLat();
+            double lng = ecApp.getMyLocation().getLong();
+            builder.include(new LatLng(lat, lng));
             builder.include(distressLocation);
             LatLngBounds bounds = builder.build();
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 15));
         }
     }
 
@@ -215,10 +225,16 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         GoogleMap map = mapFragment.getMap();
-        LatLng hardcoded = new LatLng(37.4000958, -122.14166);
+        LatLng hardcoded = new LatLng(distressMarker.getPosition().latitude+0.0005, distressMarker.getPosition().longitude+0.0001);
+        map.clear();
 
+        map.addMarker(new MarkerOptions()
+                .title("DISTRESS")
+                .position(distressMarker.getPosition())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         //Responder1Marker.remove();
         //distressMarker.remove();
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
         Marker responder1Marker = map.addMarker(new MarkerOptions()
                 .title("1st Responder Arrived")
@@ -231,10 +247,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         GoogleMap map = mapFragment.getMap();
-        LatLng hardcoded = new LatLng(37.399712, -122.142063);
-
-        //Responder1Marker.remove();
-        //distressMarker.remove();
+        LatLng hardcoded = new LatLng(distressMarker.getPosition().latitude - 0.0005, distressMarker.getPosition().longitude - 0.0001);
+        map.clear();
+        map.addMarker(new MarkerOptions()
+                .title("DISTRESS")
+                .position(distressMarker.getPosition())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(hardcoded, 13));
         Marker responder2Marker = map.addMarker(new MarkerOptions()
                 .title("2nd Responder Arrived")
