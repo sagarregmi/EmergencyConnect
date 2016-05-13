@@ -128,6 +128,7 @@ public class ResponseScreen extends AppCompatActivity implements ResponderListFr
                 if(lat==0.0 || lng==0.0 || distressMessage==null) return;
 
                 String startLatLng = lat + "," + lng;
+                //String startLatLng = "37.40,-122.1420958";
                 String endLatLng = distressMessage.lat + "," + distressMessage.lng;
 
                 Intent directionsIntent = new Intent(android.content.Intent.ACTION_VIEW,

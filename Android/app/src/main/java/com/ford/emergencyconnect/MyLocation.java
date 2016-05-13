@@ -44,6 +44,8 @@ public class MyLocation implements LocationListener {
         // Initialize the location fields
         if (location != null) {
             System.out.println("Provider " + provider + " has been selected.");
+            lat = location.getLatitude();
+            lng = location.getLongitude();
             onLocationChanged(location);
         } else {
             Log.i("Debug", "Last known location null");
