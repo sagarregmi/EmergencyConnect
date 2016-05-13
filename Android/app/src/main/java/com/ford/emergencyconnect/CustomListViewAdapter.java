@@ -2,11 +2,13 @@ package com.ford.emergencyconnect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -51,6 +53,11 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
         public TextView tvResponderSkills;
         public TextView tvETAValue;
         public TextView tvPhoneNumber;
+
+        public TextView tvResponderNameTitle;
+        public TextView tvResponderSkillsTitle;
+        public TextView tvResponderPhoneNumberTitle;
+        public LinearLayout etaConatainer;
     }
 
     @Override
@@ -67,7 +74,11 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
             holder.tvETAValue = (TextView) vi.findViewById(R.id.tvETAValue);
             holder.tvPhoneNumber = (TextView) vi.findViewById(R.id.tvResponderPhoneNumber);
 
-            vi.setTag( holder );
+            holder.tvResponderNameTitle = (TextView) vi.findViewById(R.id.tvResponderNameTitle);
+            holder.tvResponderSkillsTitle = (TextView) vi.findViewById(R.id.tvResponderSkillsTitle);
+            holder.tvResponderPhoneNumberTitle = (TextView) vi.findViewById(R.id.tvResponderPhoneNumberTitle);
+            holder.etaConatainer = (LinearLayout) vi.findViewById(R.id.containerETA);
+            vi.setTag(holder);
         }
         else {
             holder = (ViewHolder) vi.getTag();
@@ -76,21 +87,41 @@ public class CustomListViewAdapter extends BaseAdapter implements View.OnClickLi
         if(data.size()<=0)
         {
             holder.tvResponderName.setText("0 Responder");
+            holder.tvResponderName.setTextColor(Color.BLACK);
             holder.tvResponderSkills.setVisibility(View.INVISIBLE);
             holder.tvPhoneNumber.setVisibility(View.INVISIBLE);
 
+            holder.tvResponderNameTitle.setVisibility(View.INVISIBLE);
+            holder.tvResponderSkillsTitle.setVisibility(View.INVISIBLE);
+            holder.tvResponderPhoneNumberTitle.setVisibility(View.INVISIBLE);
+            //vi.findViewById(R.id.responderListUIViewSeparator).setVisibility(View.INVISIBLE);
+
         }
-        else
-        {
+        else {
             responseMessage = null;
             responseMessage = ( ResponseMessage ) data.get( position );
 
+            holder.tvResponderNameTitle.setVisibility(View.VISIBLE);
+            holder.tvResponderSkillsTitle.setVisibility(View.VISIBLE);
+            holder.tvResponderPhoneNumberTitle.setVisibility(View.VISIBLE);
+            //vi.findViewById(R.id.responderListUIViewSeparator).setVisibility(View.VISIBLE);
+
             holder.tvResponderSkills.setVisibility(View.VISIBLE);
             holder.tvPhoneNumber.setVisibility(View.VISIBLE);
-            holder.tvResponderName.setText("Name: " + responseMessage.getName());
-            holder.tvResponderSkills.setText("Skills: " + responseMessage.getSkills() );
-            holder.tvETAValue.setText( "" + responseMessage.getETA() + " Mins" );
-            holder.tvPhoneNumber.setText( "Phone: " + responseMessage.getPhoneNumber() );
+
+            holder.tvResponderName.setText("" + responseMessage.getName());
+            holder.tvResponderName.setTextColor(Color.RED);
+            holder.tvResponderSkills.setText("" + responseMessage.getSkills() );
+            /*
+            if(responseMessage.ETA == -1 ) {
+                holder.tvETAValue.setText("ARRIVED");
+                holder.tvETAValue.setTextColor(Color.WHITE);
+                holder.etaConatainer.setBackgroundColor(Color.RED);
+            }*/
+            //else if (responseMessage.getETA() > 0){
+                holder.tvETAValue.setText("" + responseMessage.getETA() + " Mins");
+            //}
+            holder.tvPhoneNumber.setText("" + responseMessage.getPhoneNumber());
             vi.setOnClickListener(new OnItemClickListener( position ));
         }
 

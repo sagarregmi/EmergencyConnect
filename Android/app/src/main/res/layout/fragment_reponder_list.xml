@@ -14,10 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/border">
 
         <TextView
@@ -28,8 +28,8 @@
             android:textSize="20sp"
             android:layout_marginRight="5dp"
             android:textStyle="bold"
-            android:textColor="@color/LightRed2"
-            android:layout_gravity="center"/>
+            android:textColor="@color/Red"
+            android:layout_gravity="left"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
